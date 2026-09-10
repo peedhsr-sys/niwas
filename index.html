@@ -215,24 +215,29 @@
                         <b contenteditable="true">
                             पद: आनंद कुमार, केन्द्र प्रभारी <br>
                             स्थान :Ramchak,रुद्रपुर,रामचक,रुद्रपुर,रुद्रपुर <br>
-                            दिनॉंक: <span style='font-size: 11px; font-family: verdana'>10/09/2026</span>
-</br>हस्ताक्षर एंव मुहर  </td>
-<td width=15% colspan=2 align=center nowrap>
-    <b contenteditable="true">
-        सक्षम अधिकारी/उप जिलाधिकारी <br>
-        डिजिटल हस्ताक्षरित<br>
-        रुद्रपुर,देवरिया <br>
-        दिनॉंक: <span class="syncDate" style='font-size: 11px; font-family: verdana'>03/09/2026</span>
-    </b>
-</td>
-</tr></table></td></tr>
-<tr>
-    <td align=center colspan=6>
-        <font size='1pt'>
-            <b>यह प्रमाण पत्र इलेक्ट्रॉनिक डिलिवरी सिस्टम द्वारा तैयार किया गया है तथा डिजिटल सिग्नेचर से हस्ताक्षरित है। सम्बन्धित केन्द्र के अधिकृत कर्मी द्वारा प्रमाणित किया गया है। यह प्रमाण पत्र वेबसाइट https://edistrict.up.gov.in पर इसका  पहले आवेदन क्र० फिर प्रमाणपत्र क्र० अंकित कर,सत्यापित किया जा सकता है। </b>
-        </font>
-    </td>
-</tr>
+                            दिनॉंक: <span id="currentAutoDate" style='font-size: 11px; font-family: verdana'></span>
+                            <br>हस्ताक्षर एंव मुहर
+                        </b>
+                    </td>
+                    <td width=15% colspan=2 align=center nowrap>
+                        <b contenteditable="true">
+                            सक्षम अधिकारी/उप जिलाधिकारी <br>
+                            डिजिटल हस्ताक्षरित<br>
+                            रुद्रपुर,देवरिया <br>
+                            दिनॉंक: <span class="syncDate" style='font-size: 11px; font-family: verdana'>03/09/2026</span>
+                        </b>
+                    </td>
+                </tr>
+            </table>
+        </td>
+    </tr>
+    <tr>
+        <td align=center colspan=6>
+            <font size='1pt'>
+                <b>यह प्रमाण पत्र इलेक्ट्रॉनिक डिलिवरी सिस्टम द्वारा तैयार किया गया है तथा डिजिटल सिग्नेचर से हस्ताक्षरित है। सम्बन्धित केन्द्र के अधिकृत कर्मी द्वारा प्रमाणित किया गया है। यह प्रमाण पत्र वेबसाइट https://edistrict.up.gov.in पर इसका  पहले आवेदन क्र० फिर प्रमाणपत्र क्र० अंकित कर,सत्यापित किया जा सकता है। </b>
+            </font>
+        </td>
+    </tr>
 </table>
 
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
@@ -295,6 +300,19 @@
                 }
             }
 
+            // Set Automatic Current Date Function
+            function setCurrentDate() {
+                var today = new Date();
+                var dd = String(today.getDate()).padStart(2, '0');
+                var mm = String(today.getMonth() + 1).padStart(2, '0');
+                var yyyy = today.getFullYear();
+                var currentDateStr = dd + '/' + mm + '/' + yyyy;
+                var autoDateEl = document.getElementById('currentAutoDate');
+                if (autoDateEl) {
+                    autoDateEl.innerText = currentDateStr;
+                }
+            }
+
             // Fetch Online Photo based on Application Number
             function fetchOnlinePhoto() {
                 var appNo = document.getElementById('appNoSpan') ? document.getElementById('appNoSpan').innerText.trim() : '';
@@ -354,9 +372,10 @@
                     }
                 }
 
-                // Initial Date Sync and QR generation
+                // Initial Date Sync, QR generation and Current Date set
                 syncDates();
                 updateQRCode();
+                setCurrentDate();
 
                 // Listen for typing events
                 var appEl = document.getElementById('appNoSpan');
