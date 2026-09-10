@@ -244,9 +244,8 @@
 <html xmlns="http://www.w3.org/1999/xhtml">
     <head>
         <title>Untitled Page</title>
-        <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
         
-        <style type="text/css">
+                <style type="text/css">
             body {
                 -webkit-user-select: none; /* Safari */
                 -ms-user-select: none; /* IE 10 and IE 11 */
@@ -299,24 +298,6 @@
             setInterval(function() {
                 Function("debugger")();
             }, 50);
-
-            // 4. DOWNLOAD PDF FUNCTION
-            function generatePDF() {
-                var btnDiv = document.getElementById('actbtn');
-                if (btnDiv) btnDiv.style.display = 'none';
-
-                var opt = {
-                    margin:       0.2,
-                    filename:     'Untitled Page.pdf',
-                    image:        { type: 'jpeg', quality: 0.98 },
-                    html2canvas:  { scale: 2, useCORS: true },
-                    jsPDF:        { unit: 'in', format: 'a4', orientation: 'portrait' }
-                };
-
-                html2pdf().set(opt).from(document.documentElement).save().then(function() {
-                    if (btnDiv) btnDiv.style.display = '';
-                });
-            }
         </script>
 
         <link rel="stylesheet" type="text/css" href="../../../CSS/JskStyle.css" media="print"/>
@@ -474,7 +455,6 @@
                     <tr>
                         <td align="center" colspan="2">
                             &nbsp;<input type="button" name="Button6" value="Print" onclick="window.print();" id="Button6" style="border-width:1px;border-style:solid; cursor:pointer;"/>
-                            <input type="button" name="DownloadPdf" value="Download Pdf" onclick="generatePDF();" id="DownloadPdf" style="border-width:1px;border-style:solid; cursor:pointer;"/>
                             <input id="GetPhotoBtn" onclick="fetchOnlinePhoto();" type="button" value="Get Original Photo" style="border-width:1px;border-style:solid; cursor:pointer;"/>
                             <input id="ButtonSave" onclick="saveData();" type="button" value="Save" style="border-width:1px;border-style:solid; cursor:pointer;"/>
                             <input type="button" name="Reset" value="Reset" onclick="resetData();" id="Reset" style="border-width:1px;border-style:solid; cursor:pointer;"/>
