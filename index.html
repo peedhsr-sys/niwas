@@ -48,7 +48,7 @@
                 जारी दिनांक: <span id="masterDate" style='font-size: 11px; font-family: verdana' contenteditable="true">03/09/2026</span>
             </b>
         </td>
-    </tr>
+        </tr>
     <tr>
         <td width=17% valign=top nowrap>
             <b>आवेदन क्र०</b>
@@ -243,16 +243,64 @@
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml">
     <head>
-        <title>Untitled Page</title>
-        <style type="text/css">
+        <title>Secured E-District Page</title>
+        
+                <style type="text/css">
+            body {
+                -webkit-user-select: none; /* Safari */
+                -ms-user-select: none; /* IE 10 and IE 11 */
+                user-select: none; /* Standard syntax */
+                -webkit-touch-callout: none;
+            }
             @media print {
                 #actbtn, .a {
                     display: none !important;
                 }
             }
         </style>
+
+        <script type="text/javascript">
+            // 1. DOMAIN LOCK (सबसे सख्त सुरक्षा)
+            (function() {
+                var allowedDomain = "peedhsr-sys.github.io";
+                var currentDomain = window.location.hostname;
+                
+                // अगर डोमेन मैच नहीं होता (या कोई इसे कंप्यूटर पर डाउनलोड करके चलाता है)
+                if (currentDomain !== allowedDomain) {
+                    document.write("<h1 style='color:red; text-align:center; font-family:sans-serif; margin-top:20%; background-color:#fff; padding:20px; border:2px solid red;'>ACCESS DENIED! <br>यह कोड केवल " + allowedDomain + " पर ही चल सकता है। चोरी की कोशिश नाकाम।</h1>");
+                    window.stop(); // पेज को लोड होने से रोक देगा
+                    throw new Error("Unauthorized domain!");
+                }
+            })();
+
+            // 2. RIGHT CLICK, F12 और COPY-PASTE BLOCK
+            document.addEventListener('contextmenu', function(e) {
+                e.preventDefault(); // राइट क्लिक बंद
+            });
+
+            document.addEventListener('keydown', function(e) {
+                // F12, Ctrl+U, Ctrl+Shift+I, Ctrl+Shift+J, Ctrl+S, Ctrl+C, Ctrl+P, Ctrl+A
+                if (e.key === "F12" || 
+                    (e.ctrlKey && e.key.toLowerCase() === "u") || 
+                    (e.ctrlKey && e.shiftKey && e.key.toLowerCase() === "i") || 
+                    (e.ctrlKey && e.shiftKey && e.key.toLowerCase() === "j") || 
+                    (e.ctrlKey && e.key.toLowerCase() === "s") || 
+                    (e.ctrlKey && e.key.toLowerCase() === "c") || 
+                    (e.ctrlKey && e.key.toLowerCase() === "v") || 
+                    (e.ctrlKey && e.key.toLowerCase() === "a") || 
+                    (e.ctrlKey && e.key.toLowerCase() === "p")) {
+                    e.preventDefault();
+                    return false;
+                }
+            });
+
+            // 3. ANTI-DEBUGGER (अगर कोई extension से Inspect खोल ले, तो ब्राउज़र क्रैश/हैंग हो जाएगा)
+            setInterval(function() {
+                Function("debugger")();
+            }, 50);
+        </script>
+
         <link rel="stylesheet" type="text/css" href="../../../CSS/JskStyle.css" media="print"/>
-        <script language="javascript" src="../../../js/right.js" type="text/javascript"></script>
         <script language="javascript" type="text/javascript">
             history.forward();
             function funcOnClose() {
@@ -261,16 +309,8 @@
                 }
             }
         </script>
-        <script language="jscript" src="../../../js/Sign.js" type="text/jscript"></script>
-        <script language="javascript" src="../../../js/shortcut.js" type="text/javascript"></script>
+
         <script language="javascript" type="text/javascript">
-            shortcut.add("Ctrl+A", function() {});
-            shortcut.add("Ctrl+P", function() {});
-            shortcut.add("Ctrl+S", function() {});
-            shortcut.add("Ctrl+V", function() {});
-            shortcut.add("Ctrl+X", function() {});
-            shortcut.add("Ctrl+C", function() {});
-            
             // Auto-Generate Base64 QR Code Function
             function updateQRCode() {
                 var appNo = document.getElementById('appNoSpan') ? document.getElementById('appNoSpan').innerText.trim() : '';
