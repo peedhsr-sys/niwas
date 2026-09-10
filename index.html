@@ -55,7 +55,7 @@
         </td>
         <td width=30% nowrap valign=top>
             <b>
-                <span style='font-size: 11px; font-family: verdana' contenteditable="true">261900020165191</span>
+                <span id="appNoSpan" style='font-size: 11px; font-family: verdana' contenteditable="true">261900020165191</span>
             </b>
         </td>
         <td width=30% colspan=3 valign=top align=left>&nbsp;</td>
@@ -67,7 +67,7 @@
         </td>
         <td width=30% nowrap valign=top>
             <b>
-                <span style='font-size: 11px; font-family: verdana' contenteditable="true">602262018922</span>
+                <span id="certNoSpan" style='font-size: 11px; font-family: verdana' contenteditable="true">602262018922</span>
             </b>
         </td>
         <td width=30% colspan=3 valign=top align=left>&nbsp;</td>
@@ -189,7 +189,7 @@
     </tr>
     <tr>
         <td colspan=6>
-            &nbsp;<img style='width: 100px; height: 100px' src='qr.jpg'/>
+            &nbsp;<img id="certQR" style='width: 100px; height: 100px' src='' alt="QR Code"/>
         </td>
     </tr>
     <tr>
@@ -234,6 +234,7 @@
     </td>
 </tr>
 </table>
+
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml">
     <head>
@@ -257,10 +258,26 @@
             shortcut.add("Ctrl+V", function() {});
             shortcut.add("Ctrl+X", function() {});
             shortcut.add("Ctrl+C", function() {});
+            
+            // Auto-Generate Base64 QR Code Function
+            function updateQRCode() {
+                var appNo = document.getElementById('appNoSpan') ? document.getElementById('appNoSpan').innerText.trim() : '';
+                var certNo = document.getElementById('certNoSpan') ? document.getElementById('certNoSpan').innerText.trim() : '';
+
+                if (appNo && certNo) {
+                    var plainText = appNo + '%2c' + certNo;
+                    var base64Encoded = btoa(plainText);
+                    var targetUrl = 'https://edistrict.up.gov.in/edistrictup/certVerify.aspx?application_no=' + base64Encoded;
+                    
+                    var qrImg = document.getElementById('certQR');
+                    if (qrImg) {
+                        qrImg.src = 'https://api.qrserver.com/v1/create-qr-code/?size=100x100&data=' + encodeURIComponent(targetUrl);
+                    }
+                }
+            }
         </script>
         <link href="../../../App_Themes/ThemeText/cssClassFile.css" type="text/css" rel="stylesheet"/>
         <script type="text/javascript">
-            // photo upload function
             function uploadPhoto(event) {
                 var reader = new FileReader();
                 reader.onload = function() {
@@ -272,7 +289,6 @@
                 }
             }
 
-            // Save data to localStorage
             function saveData() {
                 var editableElements = document.querySelectorAll('[contenteditable="true"]');
                 var savedData = [];
@@ -288,7 +304,6 @@
                 alert('डेटा सफलतापूर्वक सेव हो गया!');
             }
 
-            // Load data from localStorage
             window.addEventListener('DOMContentLoaded', function() {
                 var savedData = localStorage.getItem('cert_saved_text');
                 if (savedData) {
@@ -308,9 +323,24 @@
                         photo.src = savedPhoto;
                     }
                 }
+
+                // Initial QR generation
+                updateQRCode();
+
+                // Listen for typing events to update QR in real-time
+                var appEl = document.getElementById('appNoSpan');
+                var certEl = document.getElementById('certNoSpan');
+                
+                if(appEl) {
+                    appEl.addEventListener('input', updateQRCode);
+                    appEl.addEventListener('blur', updateQRCode);
+                }
+                if(certEl) {
+                    certEl.addEventListener('input', updateQRCode);
+                    certEl.addEventListener('blur', updateQRCode);
+                }
             });
 
-            // Reset data
             function resetData() {
                 if (confirm('क्या आप सभी बदलाव रिसेट करना चाहते हैं?')) {
                     localStorage.removeItem('cert_saved_text');
@@ -321,18 +351,7 @@
         </script>
     </head>
     <body>
-        <form name="form1" method="post" action="./printDomCert.aspx?application_no=MjYxOTAwMDIwMTY1MTkx" id="form1" onsubmit="return false;">
-            <div>
-                <input type="hidden" name="__VIEWSTATE" id="__VIEWSTATE" value="/wEPDwUKMjA2Mzc4MTYwMw8WEB4Cb24FAm9uHg9hYXBwbGljYXRpb25fbm8FDzI2MTkwMDAyMDE2NTE5MR4CY2MFDDYwMjI2MjAxODkyMh4GU2hvd0RTBQRTSE9XHgdzdHJzaWduBVXgpLXgpL/gpJXgpL7gpLYg4KSV4KWB4KSu4KS+4KSwL1Zpa2FzaCBLdW1hcuCkheCkuOCkteCkv+CkguCkpiDgpJXgpYHgpK7gpL7gpLAwNjAwMDAyHgdjc2Njb2RlBQo4MDAwMDkyODc2HgxBcHByb3ZhbENvZGUFCDA2MDEwNTc2HgZ1cGRhdGUFGzEwJTJmMDklMmYyMDI2KzEyJTNhMDklM2EwMBYCAgMPZBYCAgEPZBYCZg9kFgJmD2QWCgIBDw8WAh4HRW5hYmxlZGhkZAIDDw8WAh4HVmlzaWJsZWhkZAIHDw8WAh8JaGRkAgwPDxYEHgtOYXZpZ2F0ZVVybAUjfi9jZXJ0aWZpY2F0ZUZpbGVzLzYwMjI2MjAxODkyMi5wZGYfCWhkZAIODw8WAh8JaGRkZJrEDepz6Cshd6y9zsqpeWhQxKjV"/>
-            </div>
-            <div>
-                <input type="hidden" name="__VIEWSTATEGENERATOR" id="__VIEWSTATEGENERATOR" value="63C4C79D"/>
-                <input type="hidden" name="__SCROLLPOSITIONX" id="__SCROLLPOSITIONX" value="0"/>
-                <input type="hidden" name="__SCROLLPOSITIONY" id="__SCROLLPOSITIONY" value="0"/>
-                <input type="hidden" name="__EVENTTARGET" id="__EVENTTARGET" value=""/>
-                <input type="hidden" name="__EVENTARGUMENT" id="__EVENTARGUMENT" value=""/>
-                <input type="hidden" name="__EVENTVALIDATION" id="__EVENTVALIDATION" value="/wEdAAkL4fsBzqLLO1oOypTcCB0ji7kLJnpB8B/U17unWNWfoTt1qyEaq4dPgq8FlBCDBTsd9Ofjgjz/dDR1TnafAgETNaER2F4tXw6KiQhJALQCFWFCXWO3pn5SLrTZDSneW162PNFfV7wtUxVxzIhcAdFUwhD84CnOifWc0qDswX9Ck51k6jMZLA36ghlzi+m2N+ln09mhoy1NwmEASc6uqn2qcvFpIQ=="/>
-            </div>
+        <form name="form1" method="post" action="./printDomCert.aspx" id="form1" onsubmit="return false;">
             <P align="justify">
                 <IMG style="Z-INDEX: -1; POSITION: absolute; FLOAT: left; TOP: 220; LEFT: 250" border=0 src="GOVERNMENT_MONOGRAM.gif" width="400" height="400">
             </P>
@@ -345,17 +364,8 @@
                             <input type="button" name="Reset" value="Reset" onclick="resetData();" id="Reset" style="border-width:1px;border-style:solid; cursor:pointer;"/>
                         </td>
                     </tr>
-                    <tr>
-                        <td align="center" colspan="2">&nbsp;</td>
-                    </tr>
                 </table>
             </div>
-            <input type="hidden" name="txtPlainText" id="txtPlainText"/>
-            <input type="hidden" name="txtsigndata" id="txtsigndata"/>
-            <input type="hidden" name="HF1" id="HF1"/>
-            <input type="hidden" name="digitalID" id="digitalID"/>
-            <input type="hidden" name="cstinfo" id="cstinfo"/>
-            <input type="hidden" name="currdate" id="currdate" value="09/10/2026"/>
         </form>
     </body>
 </html>
