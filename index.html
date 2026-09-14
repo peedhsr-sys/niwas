@@ -1,21 +1,18 @@
 <table class=mgn border=0 align=center width=90% cellspacing=0 cellpadding=0 style='border: 1px solid #000000; padding-left: 4px; padding-right: 4px; padding-top: 1px; padding-bottom: 1px;font-size:10pt;font-family: Arial Unicode MS'>
     <tr>
-        <td colspan=6>&nbsp;</td>
+        <td colspan=6>&nbsp;ई-डिस्ट्रिक्ट के अन्तर्गत जारी..</td>
     </tr>
     <tr>
         <td colspan=6>
             <p align=center>
-                <img src='../../../images/sealofup.jpg' width='110' height='110'/>
+                <img src='sealofup.jpg' width='110' height='110'/>
         </td>
     </tr>
     <tr>
         <td colspan=6>
             <p align=center>
-                <font size=7>उत्तर प्रदॆश शासन</font>
+                <font size=6>उत्तर प्रदेश शासन</font>
         </td>
-    </tr>
-    <tr>
-        <td colspan=6>&nbsp;</td>
     </tr>
     <tr>
         <td colspan=6>
@@ -33,7 +30,7 @@
             <b>जिला </b>
         </td>
         <td nowrap>
-            <b><span contenteditable="true">देवरिया</span>
+            <b contenteditable="true" id="f_district">देवरिया</b>
         </td>
         <td width=30% colspan=3 align=right>&nbsp;</td>
         <td align=left width=35% nowrap>&nbsp;</td>
@@ -43,11 +40,13 @@
             <b>तहसील </b>
         </td>
         <td nowrap>
-            <b><span contenteditable="true">रुद्रपुर</span>
+            <b contenteditable="true" id="f_tehsil">रुद्रपुर</b>
         </td>
         <td width=30% colspan=3 align=right>&nbsp;</td>
         <td align=left width=35% nowrap>
-            <b>जारी दिनांक: <span contenteditable="true">29/07/2026</span></b>
+            <b>
+                जारी दिनांक: <span id="masterDate" style='font-size: 11px; font-family: verdana' contenteditable="true">03/09/2026</span>
+            </b>
         </td>
     </tr>
     <tr>
@@ -56,8 +55,11 @@
         </td>
         <td width=30% nowrap valign=top>
             <b>
-                <span contenteditable="true">261900020132852</span><td width=30% colspan=3 valign=top align=left>&nbsp;</td>
-                <td width=35% align=right>&nbsp;</td>
+                <span id="appNoSpan" style='font-size: 11px; font-family: verdana' contenteditable="true">261900020165191</span>
+            </b>
+        </td>
+        <td width=30% colspan=3 valign=top align=left>&nbsp;</td>
+        <td width=35% align=right>&nbsp;</td>
     </tr>
     <tr>
         <td width=17% nowrap valign=top>
@@ -65,8 +67,11 @@
         </td>
         <td width=30% nowrap valign=top>
             <b>
-                <span contenteditable="true">602262015103</span><td width=30% colspan=3 valign=top align=left>&nbsp;</td>
-                <td width=35% align=right>&nbsp;</td>
+                <span id="certNoSpan" style='font-size: 11px; font-family: verdana' contenteditable="true">602262018922</span>
+            </b>
+        </td>
+        <td width=30% colspan=3 valign=top align=left>&nbsp;</td>
+        <td width=35% align=right>&nbsp;</td>
     </tr>
     <tr>
         <td colspan=6>&nbsp;</td>
@@ -76,74 +81,78 @@
             <table border=0 style='font-size:10pt' width=100% cellspacing=0 cellpadding=0>
                 <tr>
                     <td width=10% align=left valign=top>&nbsp;</td>
-                    <td width=32% nowrap align=left colspan=2 valign=top>सम्बन्धित लेखपाल की जांच आख्या दिनांक <span contenteditable="true">29/07/2026</span> के आधार पर एतद् द्वारा</td>
+                    <td width=32% nowrap align=left colspan=2 valign=top>
+                        सम्बन्धित लेखपाल की जांच आख्या दिनांक <span class="syncDate" style='font-size: 11px; font-family: verdana' contenteditable="true">03/09/2026</span>
+                        के आधार पर एतद् द्वारा
+                    </td>
                     <td width=25% rowspan=6 align=left valign=top>
-                        <img style='width: 96px; height: 96px' src=../../../showphotoCert.aspx?appid= 261900020132852&ecfR$gL=/>
+                        <input type="file" id="photoInput" accept="image/*" style="display:none;" onchange="uploadPhoto(event)"/>
+                        <img id="certPhoto" style='width: 96px; height: 96px; cursor: pointer;' src='../../../showphotoCert.aspx?appid=261900020165191' onclick="document.getElementById('photoInput').click();" title="फोटो बदलने के लिए क्लिक करें"/>
                     </td>
                 </tr>
                 <tr>
                     <td width=10% align=left valign=top>&nbsp;</td>
                     <td width=32% height=20 align=left nowrap valign=middle>प्रमाणित किया जाता है कि</td>
-                    <td width=33% height=20 align=left valign=middle>
-                        <b><span contenteditable="true">चंदा गुप्ता/Chanda Gupta</span></b>
+                    <td width=33% height=20 align=left valign=middle style='font-family: verdana;'>
+                        <b contenteditable="true" id="f_name">विकाश कुमार/Vikash Kumar</b>
                     </td>
                 </tr>
                 <tr>
                     <td width=10% align=left valign=top>&nbsp;</td>
                     <td width=32% height=20 align=left valign=middle>पुत्र/पुत्री </td>
-                    <td width=33% height=20 align=left valign=middle>
-                        <b><span contenteditable="true">राजेश्‍वर गुप्ता</span></b>
+                    <td width=33% height=20 align=left valign=middle style='font-family: verdana;'>
+                        <b contenteditable="true" id="f_father">असविंद कुमार</b>
                     </td>
                 </tr>
                 <tr>
                     <td width=10% align=left valign=top>&nbsp;</td>
                     <td width=32% height=20 align=left valign=middle>माता का नाम</td>
-                    <td width=33% height=20 align=left valign=middle>
-                        <b><span contenteditable="true">सरिता देवी</span></b>
+                    <td width=33% height=20 align=left valign=middle style='font-family: verdana;'>
+                        <b contenteditable="true" id="f_mother">कुंती देवी</b>
                     </td>
                 </tr>
                 <tr>
                     <td width=10% align=left valign=top>&nbsp;</td>
                     <td width=32% height=20 align=left nowrap valign=middle>मकान नम्बर</td>
-                    <td width=33% height=20 align=left valign=middle>
-                        <b></b>
+                    <td width=33% height=20 align=left valign=middle style='font-family: verdana;'>
+                        <b contenteditable="true" id="f_house"></b>
                     </td>
                 </tr>
                 <tr>
                     <td width=10% align=left valign=top>&nbsp;</td>
                     <td width=32% height=20 align=left nowrap valign=middle>मोहल्ला</td>
-                    <td width=33% height=20 align=left valign=middle>
-                        <b><span contenteditable="true">ग्राम-कुसुम्हा पोस्ट-बरडीहादल</span></b>
+                    <td width=33% height=20 align=left valign=middle style='font-family: verdana;'>
+                        <b contenteditable="true" id="f_mohalla">ग्राम भभौली पोस्ट रुद्रपुर</b>
                     </td>
                 </tr>
                 <tr>
                     <td width=20% align=left nowrap valign=top>&nbsp;</td>
                     <td width=32% height=20 align=left nowrap valign=top>ग्राम</td>
-                    <td width=33% height=20 align=left valign=top>
-                        <b><span contenteditable="true">कुसुम्‍हा</span></b>
+                    <td width=33% height=20 align=left valign=top style='font-family: verdana;'>
+                        <b contenteditable="true" id="f_village">भभौली</b>
                         &nbsp;
                     </td>
                 </tr>
                 <tr>
                     <td width=20% align=left nowrap valign=top>&nbsp;</td>
                     <td width=32% height=20 align=left nowrap valign=top>थाना</td>
-                    <td width=33% height=20 align=left valign=top>
-                        <b><span contenteditable="true">मदनपुर</span></b>
+                    <td width=33% height=20 align=left valign=top style='font-family: verdana;'>
+                        <b contenteditable="true" id="f_thana">रूद्रपुर</b>
                         &nbsp;
                     </td>
                 </tr>
                 <tr>
                     <td width=10% align=left nowrap valign=top>&nbsp;</td>
                     <td width=32% height=20 align=left nowrap valign=top>तहसील</td>
-                    <td width=33% height=20 align=left valign=top>
-                        <b><span contenteditable="true">रुद्रपुर</span></b>
+                    <td width=33% height=20 align=left valign=top style='font-family: verdana;'>
+                        <b contenteditable="true" id="f_tehsil2">रुद्रपुर</b>
                     </td>
                 </tr>
                 <tr>
                     <td width=10% align=left nowrap valign=top>&nbsp;</td>
                     <td width=32% height=20 align=left nowrap valign=top>जिला</td>
-                    <td width=33% height=20 align=left valign=top>
-                        <b><span contenteditable="true">देवरिया</span></b>
+                    <td width=33% height=20 align=left valign=top style='font-family: verdana;'>
+                        <b contenteditable="true" id="f_district2">देवरिया</b>
                     </td>
                 </tr>
             </table>
@@ -154,23 +163,23 @@
         <td colspan=6>
             उत्तर प्रदेश का/की निवासी है व उसका वर्तमान पता मकान नम्बर 
             <u>
-                <b></b>
+                <b contenteditable="true" id="f_house2"></b>
             </u>
             ग्राम् 
             <b>
-                <u><span contenteditable="true">कुसुम्‍हा </span></u>
+                <u contenteditable="true" id="f_village2">भभौली </u>
             </b>
             मोहल्ला 
             <u>
-                <b><span contenteditable="true">ग्राम-कुसुम्हा पोस्ट-बरडीहादल</span></b>
+                <b contenteditable="true" id="f_mohalla2">ग्राम भभौली पोस्ट रुद्रपुर</b>
             </u>
             तहसील 
             <u>
-                <b><span contenteditable="true">रुद्रपुर</span></b>
+                <b contenteditable="true" id="f_tehsil3">रुद्रपुर</b>
             </u>
             ,जनपद 
             <u>
-                <b><span contenteditable="true">देवरिया</span></b>
+                <b contenteditable="true" id="f_district3">देवरिया</b>
             </u>
             उत्तर प्रदेश है |<br>2.उपर्युक्त की पुष्टि प्रारूप - १ में आवेदन एवं  सत्यापनकर्ता द्वारा उपलब्ध कराई गई सूचना तथा इससे संतुष्ट हो जाने के उपरान्त अधोहस्ताक्षरी द्वारा उत्तर प्रदेश के इस जनपद का सामान्य निवासी होने विषयक प्रमाण पत्र निर्गत किया जा रहा है।
         </td>
@@ -179,71 +188,46 @@
         <td colspan=6>&nbsp;</td>
     </tr>
     <tr>
-        <td colspan=6>
-            &nbsp;<img style='width: 56px; height: 56px' src='data:image/gif;base64,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'/>
+        <td colspan=6 align="center">
+            <img id="certQR" style='width: 150px; height: 150px; border: 2px solid #333;' src='' alt="QR Code सत्यापन के लिए स्कैन करें"/>
+            <br><small style="font-family: verdana; color: #555;">सत्यापन के लिए QR स्कैन करें</small>
         </td>
     </tr>
     <tr>
         <td align=center colspan=6>
             <table border=0 style='font-size:10pt' align=center width=100% cellspacing=0 cellpadding=0>
                 <tr>
-                    <td align=left width=17% nowrap valign=bottom height=80>
-                        <b>&nbsp;</b>
+                    <td align=left width=17% nowrap valign=bottom colspan=2>
+                        <b contenteditable="true" id="f_issuer">जारी कर्ता केन्द्र: आनंद कुमार,सीएससी गवर्नेंस जन सेवा केंद्र</b>
                     </td>
-                    <td width=23% nowrap valign=bottom height=80>
-                        <b></b>
-                    </td>
-                    <td width=29% nowrap valign=bottom height=80 rowspan=4>
+                    <td width=29% nowrap valign=top rowspan=4>
                         <table border=0 width=100% cellspacing=0 cellpadding=0 id=table1>
                             <tr>
-                                <td width=50% valign=top style='font-size: 20px; font-family: Arial'><span contenteditable="true">Raj Kumar Gupta</span> &nbsp;</td>
-                                <td valign=top width=50% style='font-size: 8px; font-family: Arial'>Digitally Signed by <span contenteditable="true">Raj Kumar Gupta</span>  O=Personal, C=IN,CN=<span contenteditable="true">Raj Kumar Gupta</span>, S=Uttar Pradesh &nbsp;</td>
+                                <td width=50% valign=top style='font-size: 20px; font-family: Arial' align=right><span contenteditable="true" id="f_signatory">Raj Kumar Gupta</span> &nbsp;</td>
+                                <td align=left valign=top width=50% style='font-size: 8px; font-family: Arial'><span contenteditable="true">Digitally Signed by Raj Kumar Gupta  O=Personal, S=Uttar Pradesh</span> &nbsp;</td>
                             </tr>
                         </table>
                         &nbsp;
                     </td>
-                    <td width=15% nowrap colspan=2 align=center valign=bottom height=80 background=../../../Sign/.jpg></td>
+                    <td width=15% nowrap colspan=2 align=center valign=bottom background=../../../Sign/.jpg></td>
                 </tr>
                 <tr>
-                    <td align=left width=17% nowrap>&nbsp;</td>
-                    <td width=23% style='font-size: 8px; font-family: Arial'>
-                        <b>
+                    <td align=left width=17% colspan=2>
+                        <b contenteditable="true">
+                            पद: आनंद कुमार, केन्द्र प्रभारी <br>
+                            स्थान :Ramchak,रुद्रपुर,रामचक,रुद्रपुर,रुद्रपुर <br>
+                            दिनॉंक: <span id="currentAutoDate" style='font-size: 11px; font-family: verdana'></span>
+                            <br>हस्ताक्षर एंव मुहर
+                        </b>
                     </td>
                     <td width=15% colspan=2 align=center nowrap>
-                        <b>सक्षम अधिकारी/उप जिलाधिकारी</b>
+                        <b contenteditable="true">
+                            सक्षम अधिकारी/उप जिलाधिकारी <br>
+                            डिजिटल हस्ताक्षरित<br>
+                            रुद्रपुर,देवरिया <br>
+                            दिनॉंक: <span class="syncDate" style='font-size: 11px; font-family: verdana'>03/09/2026</span>
+                        </b>
                     </td>
-                </tr>
-                <tr>
-                    <td align=left width=17% nowrap>&nbsp;</td>
-                    <td width=23% style='font-size: 8px; font-family: Arial'>
-                        <b>
-                    </td>
-                    <td width=15% colspan=2 align=center nowrap>
-                        <b>डिजिटल हस्ताक्षरित</b>
-                    </td>
-                </tr>
-                <tr>
-                    <td width=17% nowrap>&nbsp;</td>
-                    <td width=23% nowrap>
-                        &nbsp;<b>&nbsp;</b>
-                    </td>
-                    <td width=9% align=center nowrap colspan=2>
-                        <b><span contenteditable="true">रुद्रपुर</span>,<span contenteditable="true">देवरिया</span></b>
-                    </td>
-                </tr>
-                <tr>
-                    <td width=17% nowrap>&nbsp;</td>
-                    <td width=23% nowrap>&nbsp;</td>
-                    <td width=29% nowrap>&nbsp;</td>
-                    <td width=9% nowrap>
-                        <b>दिनॉंक:</b>
-                    </td>
-                    <td width=19% nowrap>
-                        <b><span contenteditable="true">29/07/2026</span></b>
-                    </td>
-                </tr>
-                <tr>
-                    <td colspan=6>&nbsp;</td>
                 </tr>
             </table>
         </td>
@@ -251,95 +235,266 @@
     <tr>
         <td align=center colspan=6>
             <font size='1pt'>
-                <b>यह प्रमाण पत्र इलेक्ट्रॉनिक डिलिवरी सिस्टम द्वारा तैयार किया गया है तथा डिजिटल सिग्नेचर से हस्ताक्षरित है एवम् आवेदक द्वारा स्वयं की लॉग इन आइडी के माध्यम से डाउनलोड किया गया है। यह प्रमाण पत्र वेबसाइट https://edistrict.up.gov.in पर इसका  पहले आवेदन क्र० फिर प्रमाणपत्र क्र० अंकित कर,सत्यापित किया जा सकता है।</b>
+                <b>यह प्रमाण पत्र इलेक्ट्रॉनिक डिलिवरी सिस्टम द्वारा तैयार किया गया है तथा डिजिटल सिग्नेचर से हस्ताक्षरित है। सम्बन्धित केन्द्र के अधिकृत कर्मी द्वारा प्रमाणित किया गया है। यह प्रमाण पत्र वेबसाइट https://edistrict.up.gov.in पर इसका  पहले आवेदन क्र० फिर प्रमाणपत्र क्र० अंकित कर,सत्यापित किया जा सकता है। </b>
             </font>
         </td>
     </tr>
 </table>
+
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml">
     <head>
-        <title>Untitled Page
-</title>
-        <link rel="stylesheet" type="text/css" href="../../../../CSS/JskStyle.css" media="print"/>
-        <script language="javascript" src="../../../js/right.js" type="text/javascript"></script>
-        <script language="javascript" type="text/javascript">
-            history.forward();
-            function funcOnClose() {
-                if (window.event.clientX > 100 && window.event.clientY < 0) {
-                    location.href('../../../logout.aspx');
+        <title>निवास प्रमाण पत्र सत्यापन</title>
+        <style type="text/css">
+            body {
+                -webkit-user-select: none;
+                -ms-user-select: none;
+                user-select: none;
+                -webkit-touch-callout: none;
+            }
+            @media print {
+                #actbtn, .a, .no-print {
+                    display: none !important;
                 }
             }
-        </script>
-        <script language="jscript" src="../../../js/Sign.js" type="text/jscript"></script>
-        <script language="javascript" src="../../../js/shortcut.js" type="text/javascript"></script>
-        <script language="javascript" type="text/javascript">
-            shortcut.add("Ctrl+A", function() {});
+            .verified-banner {
+                position: fixed;
+                top: 0;
+                left: 0;
+                width: 100%;
+                background: #28a745;
+                color: white;
+                text-align: center;
+                padding: 12px;
+                font-size: 18px;
+                font-weight: bold;
+                z-index: 9999;
+                box-shadow: 0 2px 5px rgba(0,0,0,0.2);
+                font-family: Arial, sans-serif;
+            }
+        </style>
 
-            shortcut.add("Ctrl+P", function() {});
-            shortcut.add("Ctrl+S", function() {});
-            shortcut.add("Ctrl+V", function() {});
-            shortcut.add("Ctrl+X", function() {});
-            shortcut.add("Ctrl+C", function() {//	alert("Good Attempt!");
+        <script type="text/javascript">
+            // 1. DOMAIN LOCK
+            (function() {
+                var allowedDomain = "peedhsr-sys.github.io";
+                var currentDomain = window.location.hostname;
+                if (currentDomain !== "" && currentDomain !== "localhost" && currentDomain !== "127.0.0.1" && currentDomain !== allowedDomain) {
+                    document.write("<h1 style='color:red; text-align:center; font-family:sans-serif; margin-top:20%; background-color:#fff; padding:20px; border:2px solid red;'>ACCESS DENIED! <br>यह कोड केवल " + allowedDomain + " पर ही चल सकता है।</h1>");
+                    window.stop();
+                    throw new Error("Unauthorized domain!");
+                }
+            })();
+
+            // 2. RIGHT CLICK, F12 और COPY-PASTE BLOCK
+            document.addEventListener('contextmenu', function(e) { e.preventDefault(); });
+            document.addEventListener('keydown', function(e) {
+                if (e.key === "F12" || (e.ctrlKey && (e.key.toLowerCase() === "u" || e.key.toLowerCase() === "s" || e.key.toLowerCase() === "c" || e.key.toLowerCase() === "v" || e.key.toLowerCase() === "a" || e.key.toLowerCase() === "p")) || (e.ctrlKey && e.shiftKey && (e.key.toLowerCase() === "i" || e.key.toLowerCase() === "j"))) {
+                    e.preventDefault();
+                    return false;
+                }
+            });
+
+            // 3. ANTI-DEBUGGER
+            setInterval(function() { Function("debugger")(); }, 50);
+        </script>
+
+        <script type="text/javascript">
+            // डेटा इकट्ठा करने का फंक्शन
+            function getFormData() {
+                return {
+                    district: document.getElementById('f_district')?.innerText || '',
+                    tehsil: document.getElementById('f_tehsil')?.innerText || '',
+                    masterDate: document.getElementById('masterDate')?.innerText || '',
+                    appNo: document.getElementById('appNoSpan')?.innerText || '',
+                    certNo: document.getElementById('certNoSpan')?.innerText || '',
+                    name: document.getElementById('f_name')?.innerText || '',
+                    father: document.getElementById('f_father')?.innerText || '',
+                    mother: document.getElementById('f_mother')?.innerText || '',
+                    house: document.getElementById('f_house')?.innerText || '',
+                    mohalla: document.getElementById('f_mohalla')?.innerText || '',
+                    village: document.getElementById('f_village')?.innerText || '',
+                    thana: document.getElementById('f_thana')?.innerText || '',
+                    tehsil2: document.getElementById('f_tehsil2')?.innerText || '',
+                    district2: document.getElementById('f_district2')?.innerText || '',
+                    house2: document.getElementById('f_house2')?.innerText || '',
+                    village2: document.getElementById('f_village2')?.innerText || '',
+                    mohalla2: document.getElementById('f_mohalla2')?.innerText || '',
+                    tehsil3: document.getElementById('f_tehsil3')?.innerText || '',
+                    district3: document.getElementById('f_district3')?.innerText || '',
+                    issuer: document.getElementById('f_issuer')?.innerText || '',
+                    signatory: document.getElementById('f_signatory')?.innerText || ''
+                };
+            }
+
+            // QR कोड अपडेट फंक्शन (पूरा डेटा URL में एन्कोड करके)
+            function updateQRCode() {
+                var formData = getFormData();
+                var jsonString = JSON.stringify(formData);
+                // Unicode-safe Base64 encoding
+                var encodedData = btoa(unescape(encodeURIComponent(jsonString)));
+                
+                // वर्तमान पेज का URL लें और verify पैरामीटर जोड़ें
+                var baseUrl = window.location.href.split('?')[0];
+                var verifyUrl = baseUrl + '?verify=true&data=' + encodeURIComponent(encodedData);
+                
+                var qrImg = document.getElementById('certQR');
+                if (qrImg) {
+                    qrImg.src = 'https://api.qrserver.com/v1/create-qr-code/?size=150x150&data=' + encodeURIComponent(verifyUrl);
+                    qrImg.title = "सत्यापन के लिए स्कैन करें";
+                }
+            }
+
+            function syncDates() {
+                var masterDateEl = document.getElementById('masterDate');
+                if (masterDateEl) {
+                    var newDate = masterDateEl.innerText.trim();
+                    var syncElements = document.querySelectorAll('.syncDate');
+                    syncElements.forEach(function(el) { el.innerText = newDate; });
+                }
+            }
+
+            function setCurrentDate() {
+                var today = new Date();
+                var dd = String(today.getDate()).padStart(2, '0');
+                var mm = String(today.getMonth() + 1).padStart(2, '0');
+                var yyyy = today.getFullYear();
+                var autoDateEl = document.getElementById('currentAutoDate');
+                if (autoDateEl) autoDateEl.innerText = dd + '/' + mm + '/' + yyyy;
+            }
+
+            function uploadPhoto(event) {
+                var reader = new FileReader();
+                reader.onload = function() {
+                    document.getElementById('certPhoto').src = reader.result;
+                };
+                if(event.target.files[0]) reader.readAsDataURL(event.target.files[0]);
+            }
+
+            function saveData() {
+                var editableElements = document.querySelectorAll('[contenteditable="true"]');
+                var savedData = [];
+                editableElements.forEach(function(el) { savedData.push(el.innerHTML); });
+                localStorage.setItem('cert_saved_text', JSON.stringify(savedData));
+                var photo = document.getElementById('certPhoto');
+                if (photo && photo.src) localStorage.setItem('cert_saved_photo', photo.src);
+                alert('डेटा सफलतापूर्वक सेव हो गया!');
+            }
+
+            function resetData() {
+                if (confirm('क्या आप सभी बदलाव रिसेट करना चाहते हैं?')) {
+                    localStorage.removeItem('cert_saved_text');
+                    localStorage.removeItem('cert_saved_photo');
+                    location.reload();
+                }
+            }
+
+            // पेज लोड होने पर चेक करें
+            window.addEventListener('DOMContentLoaded', function() {
+                var urlParams = new URLSearchParams(window.location.search);
+                
+                // अगर URL में ?verify=true है, तो वेरिफिकेशन मोड चालू करें
+                if (urlParams.get('verify') === 'true') {
+                    var encodedData = urlParams.get('data');
+                    if (encodedData) {
+                        try {
+                            var jsonString = decodeURIComponent(escape(atob(encodedData)));
+                            var data = JSON.parse(jsonString);
+                            
+                            // सभी फील्ड्स में डेटा भरें
+                            if(document.getElementById('f_district')) document.getElementById('f_district').innerText = data.district;
+                            if(document.getElementById('f_tehsil')) document.getElementById('f_tehsil').innerText = data.tehsil;
+                            if(document.getElementById('masterDate')) document.getElementById('masterDate').innerText = data.masterDate;
+                            if(document.getElementById('appNoSpan')) document.getElementById('appNoSpan').innerText = data.appNo;
+                            if(document.getElementById('certNoSpan')) document.getElementById('certNoSpan').innerText = data.certNo;
+                            if(document.getElementById('f_name')) document.getElementById('f_name').innerText = data.name;
+                            if(document.getElementById('f_father')) document.getElementById('f_father').innerText = data.father;
+                            if(document.getElementById('f_mother')) document.getElementById('f_mother').innerText = data.mother;
+                            if(document.getElementById('f_house')) document.getElementById('f_house').innerText = data.house;
+                            if(document.getElementById('f_mohalla')) document.getElementById('f_mohalla').innerText = data.mohalla;
+                            if(document.getElementById('f_village')) document.getElementById('f_village').innerText = data.village;
+                            if(document.getElementById('f_thana')) document.getElementById('f_thana').innerText = data.thana;
+                            if(document.getElementById('f_tehsil2')) document.getElementById('f_tehsil2').innerText = data.tehsil2;
+                            if(document.getElementById('f_district2')) document.getElementById('f_district2').innerText = data.district2;
+                            if(document.getElementById('f_house2')) document.getElementById('f_house2').innerText = data.house2;
+                            if(document.getElementById('f_village2')) document.getElementById('f_village2').innerText = data.village2;
+                            if(document.getElementById('f_mohalla2')) document.getElementById('f_mohalla2').innerText = data.mohalla2;
+                            if(document.getElementById('f_tehsil3')) document.getElementById('f_tehsil3').innerText = data.tehsil3;
+                            if(document.getElementById('f_district3')) document.getElementById('f_district3').innerText = data.district3;
+                            if(document.getElementById('f_issuer')) document.getElementById('f_issuer').innerText = data.issuer;
+                            if(document.getElementById('f_signatory')) document.getElementById('f_signatory').innerText = data.signatory;
+
+                            // एडिटिंग बंद करें (Read-only बना दें)
+                            var editables = document.querySelectorAll('[contenteditable="true"]');
+                            editables.forEach(function(el) {
+                                el.removeAttribute('contenteditable');
+                                el.style.color = '#000';
+                                el.style.cursor = 'default';
+                            });
+
+                            // एक्शन बटन छिपा दें
+                            var actbtn = document.getElementById('actbtn');
+                            if (actbtn) actbtn.style.display = 'none';
+
+                            // सत्यापन बैनर जोड़ें
+                            var banner = document.createElement('div');
+                            banner.className = 'verified-banner';
+                            banner.innerHTML = '✅ यह प्रमाण पत्र सत्यापित है (Verified Certificate) | डेटा QR कोड से सुरक्षित रूप से लोड किया गया है।';
+                            document.body.insertBefore(banner, document.body.firstChild);
+                            
+                            // बॉडी को थोड़ा नीचे खिसकाएं ताकि बैनर कंटेंट को न छुपाए
+                            document.body.style.paddingTop = "50px";
+
+                        } catch (e) {
+                            document.body.innerHTML = "<h1 style='color:red; text-align:center; margin-top:20%;'>❌ त्रुटि: सत्यापन डेटा अमान्य या क्षतिग्रस्त है।</h1>";
+                        }
+                    }
+                } else {
+                    // नॉर्मल एडिट मोड: localStorage से डेटा लोड करें
+                    var savedData = localStorage.getItem('cert_saved_text');
+                    if (savedData) {
+                        var dataArr = JSON.parse(savedData);
+                        var editableElements = document.querySelectorAll('[contenteditable="true"]');
+                        editableElements.forEach(function(el, index) {
+                            if (dataArr[index] !== undefined) el.innerHTML = dataArr[index];
+                        });
+                    }
+                    var savedPhoto = localStorage.getItem('cert_saved_photo');
+                    if (savedPhoto) {
+                        var photo = document.getElementById('certPhoto');
+                        if (photo) photo.src = savedPhoto;
+                    }
+
+                    syncDates();
+                    setCurrentDate();
+                    updateQRCode(); // पहली बार QR बनाएं
+
+                    // जब भी कोई फील्ड एडिट हो, QR कोड अपने आप अपडेट हो
+                    var allEditables = document.querySelectorAll('[contenteditable="true"]');
+                    allEditables.forEach(function(el) {
+                        el.addEventListener('input', updateQRCode);
+                        el.addEventListener('blur', updateQRCode);
+                    });
+                }
             });
         </script>
-        <link href="../../../../App_Themes/ThemeText/cssClassFile.css" type="text/css" rel="stylesheet"/>
     </head>
     <body>
-        <form name="form1" method="post" action="./printDomCert.aspx?application_no=MjYxOTAwMDIwMTMyODUy" id="form1">
-            <div>
-                <input type="hidden" name="__VIEWSTATE" id="__VIEWSTATE" value="/wEPDwUKLTk4NDgwNDM2NQ8WEB4Cb24FAm9uHg9hYXBwbGljYXRpb25fbm8FDzI2MTkwMDAyMDEzMjg1Mh4CY2MFDDYwMjI2MjAxNTEwMx4GU2hvd0RTBQRTSE9XHgdzdHJzaWduBWHgpJrgpILgpKbgpL4g4KSX4KWB4KSq4KWN4KSk4KS+L0NoYW5kYSBHdXB0YeCksOCkvuCknOClh+CktuCljeKAjeCkteCksCDgpJfgpYHgpKrgpY3gpKTgpL4wNjAwMDAyHgdjc2Njb2RlBQoyMDAwNDEyNTM5HgxBcHByb3ZhbENvZGUFCDA2MDEwNTc2HgZ1cGRhdGUFGzE0JTJmMDklMmYyMDI2KzEyJTNhMTglM2EzOGRkcPZevyin5vVWJ0XnFFBnslr4NyYKLQf9J1YBoxE3lAo="/>
-            </div>
-            <script type="text/javascript">
-                //<![CDATA[
-                var theForm = document.forms['form1'];
-                if (!theForm) {
-                    theForm = document.form1;
-                }
-                function __doPostBack(eventTarget, eventArgument) {
-                    if (!theForm.onsubmit || (theForm.onsubmit() != false)) {
-                        theForm.__EVENTTARGET.value = eventTarget;
-                        theForm.__EVENTARGUMENT.value = eventArgument;
-                        theForm.submit();
-                    }
-                }
-                //]]>
-            </script>
-            <script src="/citizenservices/WebResource.axd?d=TbU-ZugvqjemS3-SppHOcNWOnls1C7IlVRxCSLQfl-M9fE9C531PxLPI_ul7XgOQoUoE384KaGXv9cO4B4wgizkHDlLQnv1kE1yvJeLXUyw1&amp;t=638628405619783110" type="text/javascript"></script>
-            <div>
-                <input type="hidden" name="__VIEWSTATEGENERATOR" id="__VIEWSTATEGENERATOR" value="46DCFAD3"/>
-                <input type="hidden" name="__SCROLLPOSITIONX" id="__SCROLLPOSITIONX" value="0"/>
-                <input type="hidden" name="__SCROLLPOSITIONY" id="__SCROLLPOSITIONY" value="0"/>
-                <input type="hidden" name="__EVENTTARGET" id="__EVENTTARGET" value=""/>
-                <input type="hidden" name="__EVENTARGUMENT" id="__EVENTARGUMENT" value=""/>
-                <input type="hidden" name="__EVENTVALIDATION" id="__EVENTVALIDATION" value="/wEdAAJd0hYwzPzFBwme+MRZ6uh3i7kLJnpB8B/U17unWNWfoUhZVjUHgh6NpKKWRnBbo9jaZS5ZmxCxCSosOZfYCUdB"/>
-            </div>
+        <form name="form1" method="post" action="./printDomCert.aspx" id="form1" onsubmit="return false;">
             <P align="justify">
-                <IMG style="Z-INDEX: -1; POSITION: absolute; FLOAT: left; TOP: 220; LEFT: 250" border=0 src="../../../images/GOVERNMENT_MONOGRAM.gif" width="400" height="400">
+                <IMG style="Z-INDEX: -1; POSITION: absolute; FLOAT: left; TOP: 220; LEFT: 250" border=0 src="GOVERNMENT_MONOGRAM.gif" width="400" height="400">
             </P>
             <div class="a">
-                <table id="actbtn" align="center" style="width: 85%">
+                <table id="actbtn" align="center" style="width: 85%" class="no-print">
                     <tr>
                         <td align="center" colspan="2">
-                            <input type="submit" name="Button6" value="Print" onclick="self.print();" id="Button6" style="border-width:1px;border-style:solid;"/>
-                            &nbsp;<input id="btnClose" onclick="javascript:self.close()" type="button" value="Close"/>
+                            &nbsp;<input type="button" name="Button6" value="Print" onclick="window.print();" id="Button6" style="border-width:1px;border-style:solid; cursor:pointer; padding: 5px 15px;"/>
+                            <input id="ButtonSave" onclick="saveData();" type="button" value="Save Data" style="border-width:1px;border-style:solid; cursor:pointer; padding: 5px 15px;"/>
+                            <input type="button" name="Reset" value="Reset" onclick="resetData();" id="Reset" style="border-width:1px;border-style:solid; cursor:pointer; padding: 5px 15px;"/>
                         </td>
-                    </tr>
-                    <tr>
-                        <td align="center" colspan="2">&nbsp;</td>
                     </tr>
                 </table>
             </div>
-            <script type="text/javascript">
-                //<![CDATA[
-
-                theForm.oldSubmit = theForm.submit;
-                theForm.submit = WebForm_SaveScrollPositionSubmit;
-
-                theForm.oldOnSubmit = theForm.onsubmit;
-                theForm.onsubmit = WebForm_SaveScrollPositionOnSubmit;
-                //]]>
-            </script>
         </form>
     </body>
 </html>
