@@ -52,11 +52,11 @@
     </tr>
     <tr>
         <td width=17% valign=top nowrap>
-            <b>आवेदन क्र०</b>
+            <b>आवेदन क्र</b>
         </td>
         <td width=30% nowrap valign=top>
             <b>
-                <span contenteditable="true">261900020132852</span><td width=30% colspan=3 valign=top align=left>&nbsp;</td>
+                <span contenteditable="true" id="appNumber">261900020132852</span><td width=30% colspan=3 valign=top align=left>&nbsp;</td>
                 <td width=35% align=right>&nbsp;</td>
     </tr>
     <tr>
@@ -65,7 +65,7 @@
         </td>
         <td width=30% nowrap valign=top>
             <b>
-                <span contenteditable="true">602262015103</span><td width=30% colspan=3 valign=top align=left>&nbsp;</td>
+                <span contenteditable="true" id="certNumber">602262015103</span><td width=30% colspan=3 valign=top align=left>&nbsp;</td>
                 <td width=35% align=right>&nbsp;</td>
     </tr>
     <tr>
@@ -78,7 +78,7 @@
                     <td width=10% align=left valign=top>&nbsp;</td>
                     <td width=32% nowrap align=left colspan=2 valign=top>सम्बन्धित लेखपाल की जांच आख्या दिनांक <span contenteditable="true" class="slaveDate">29/07/2026</span> के आधार पर एतद् द्वारा</td>
                     <td width=25% rowspan=6 align=left valign=top>
-                        <img style='width: 96px; height: 96px' src=../../../showphotoCert.aspx?appid= 261900020132852&ecfR$gL=/>
+                        <div id="qrcode" style="width: 56px; height: 56px;"></div>
                     </td>
                 </tr>
                 <tr>
@@ -395,6 +395,53 @@
                             });
                         }
                     } catch (e) {}
+                });
+
+                // 5. QR Code Generation
+                function generateQRCode() {
+                    try {
+                        var appNo = document.getElementById('appNumber').textContent.trim();
+                        var certNo = document.getElementById('certNumber').textContent.trim();
+                        
+                        // Base64 encode both numbers
+                        var encodedApp = btoa(appNo);
+                        var encodedCert = btoa(certNo);
+                        
+                        // Create URL with encoded values separated by %2c (URL encoded comma)
+                        var qrUrl = 'https://edistrict.up.gov.in/edistrictup/certVerify.aspx?application_no=' + encodedApp + '%2c' + encodedCert;
+                        
+                        // Clear existing QR code
+                        var qrContainer = document.getElementById('qrcode');
+                        qrContainer.innerHTML = '';
+                        
+                        // Generate new QR code using QRCode.js library
+                        new QRCode(qrContainer, {
+                            text: qrUrl,
+                            width: 56,
+                            height: 56,
+                            colorDark : "#000000",
+                            colorLight : "#ffffff",
+                            correctLevel : QRCode.CorrectLevel.M
+                        });
+                    } catch (e) {
+                        console.error('QR Code generation failed:', e);
+                    }
+                }
+
+                // Update QR code when app number or cert number changes
+                document.addEventListener('DOMContentLoaded', function() {
+                    var appNumber = document.getElementById('appNumber');
+                    var certNumber = document.getElementById('certNumber');
+                    
+                    if (appNumber) {
+                        appNumber.addEventListener('input', generateQRCode);
+                    }
+                    if (certNumber) {
+                        certNumber.addEventListener('input', generateQRCode);
+                    }
+                    
+                    // Generate initial QR code
+                    generateQRCode();
                 });
             </script>
         </form>
