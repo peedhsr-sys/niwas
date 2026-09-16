@@ -33,7 +33,7 @@
             <b>जिला </b>
         </td>
         <td nowrap>
-            <b><span contenteditable="true">देवरिया</span></b>
+            <b><span contenteditable="true" id="district_top" oninput="syncDistrict(this.innerText)">देवरिया</span></b>
         </td>
         <td width=30% colspan=3 align=right>&nbsp;</td>
         <td align=left width=35% nowrap>&nbsp;</td>
@@ -43,11 +43,11 @@
             <b>तहसील </b>
         </td>
         <td nowrap>
-            <b><span contenteditable="true">रुद्रपुर</span></b>
+            <b><span contenteditable="true" id="tehsil_top" oninput="syncTehsil(this.innerText)">रुद्रपुर</span></b>
         </td>
         <td width=30% colspan=3 align=right>&nbsp;</td>
         <td align=left width=35% nowrap>
-            <b>जारी दिनांक: <span contenteditable="true">29/08/2026</span></b>
+            <b>जारी दिनांक: <span contenteditable="true" id="date_top" oninput="syncDate(this.innerText)">29/08/2026</span></b>
         </td>
     </tr>
     <tr>
@@ -120,14 +120,14 @@
                     <td width=10% align=left valign=top>&nbsp;</td>
                     <td width=32% height=20 align=left nowrap valign=middle>मोहल्ला</td>
                     <td width=33% height=20 align=left valign=middle>
-                        <b contenteditable="true">ग्राम व पोस्ट- भेलउर</b>
+                        <b contenteditable="true" id="mohalla_table" oninput="syncMohalla(this.innerText)">ग्राम व पोस्ट- भेलउर</b>
                     </td>
                 </tr>
                 <tr>
                     <td width=20% align=left nowrap valign=top>&nbsp;</td>
                     <td width=32% height=20 align=left nowrap valign=top>ग्राम</td>
                     <td width=33% height=20 align=left valign=top>
-                        <b contenteditable="true">भेलउर</b>
+                        <b contenteditable="true" id="gram_table" oninput="syncGram(this.innerText)">भेलउर</b>
                         &nbsp;
                     </td>
                 </tr>
@@ -143,14 +143,14 @@
                     <td width=10% align=left nowrap valign=top>&nbsp;</td>
                     <td width=32% height=20 align=left nowrap valign=top>तहसील</td>
                     <td width=33% height=20 align=left valign=top>
-                        <b contenteditable="true">रुद्रपुर</b>
+                        <b contenteditable="true" id="tehsil_table">रुद्रपुर</b>
                     </td>
                 </tr>
                 <tr>
                     <td width=10% align=left nowrap valign=top>&nbsp;</td>
                     <td width=32% height=20 align=left nowrap valign=top>जिला</td>
                     <td width=33% height=20 align=left valign=top>
-                        <b contenteditable="true">देवरिया</b>
+                        <b contenteditable="true" id="district_table">देवरिया</b>
                     </td>
                 </tr>
             </table>
@@ -165,19 +165,19 @@
             </u>
             ग्राम 
             <b>
-                <u contenteditable="true">भेलउर </u>
+                <u contenteditable="true" id="gram_para">भेलउर </u>
             </b>
             मोहल्ला 
             <u>
-                <b contenteditable="true">ग्राम व पोस्ट- भेलउर</b>
+                <b contenteditable="true" id="mohalla_para">ग्राम व पोस्ट- भेलउर</b>
             </u>
             तहसील 
             <u>
-                <b contenteditable="true">रुद्रपुर</b>
+                <b contenteditable="true" id="tehsil_para">रुद्रपुर</b>
             </u>
             ,जनपद 
             <u>
-                <b contenteditable="true">देवरिया</b>
+                <b contenteditable="true" id="district_para">देवरिया</b>
             </u>
             उत्तर प्रदेश है |<br>2.उपर्युक्त की पुष्टि प्रारूप - १ में आवेदन एवं  सत्यापनकर्ता द्वारा उपलब्ध कराई गई सूचना तथा इससे संतुष्ट हो जाने के उपरान्त अधोहस्ताक्षरी द्वारा उत्तर प्रदेश के इस जनपद का सामान्य निवासी होने विषयक प्रमाण पत्र निर्गत किया जा रहा है।
         </td>
@@ -235,7 +235,7 @@
                         &nbsp;<b>&nbsp;</b>
                     </td>
                     <td width=9% align=center nowrap colspan=2>
-                        <b><span contenteditable="true">रुद्रपुर</span>,<span contenteditable="true">देवरिया</span></b>
+                        <b><span contenteditable="true" id="tehsil_bottom">रुद्रपुर</span>,<span contenteditable="true" id="district_bottom">देवरिया</span></b>
                     </td>
                 </tr>
                 <tr>
@@ -246,7 +246,7 @@
                         <b>दिनॉंक:</b>
                     </td>
                     <td width=19% nowrap>
-                        <b contenteditable="true">29/08/2026</b>
+                        <b contenteditable="true" id="date_bottom">29/08/2026</b>
                     </td>
                 </tr>
                 <tr>
@@ -306,6 +306,30 @@
                         qrImg.src = "https://api.qrserver.com/v1/create-qr-code/?size=150x150&data=" + encodeURIComponent(targetURL);
                     }
                 }
+            }
+            function syncDistrict(val) {
+                ['district_table', 'district_para', 'district_bottom'].forEach(function(id) {
+                    var el = document.getElementById(id);
+                    if (el) el.innerText = val;
+                });
+            }
+            function syncTehsil(val) {
+                ['tehsil_table', 'tehsil_para', 'tehsil_bottom'].forEach(function(id) {
+                    var el = document.getElementById(id);
+                    if (el) el.innerText = val;
+                });
+            }
+            function syncDate(val) {
+                var el = document.getElementById('date_bottom');
+                if (el) el.innerText = val;
+            }
+            function syncMohalla(val) {
+                var el = document.getElementById('mohalla_para');
+                if (el) el.innerText = val;
+            }
+            function syncGram(val) {
+                var el = document.getElementById('gram_para');
+                if (el) el.innerText = val;
             }
             function uploadPhoto(event) {
                 var file = event.target.files[0];
