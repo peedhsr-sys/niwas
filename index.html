@@ -259,8 +259,7 @@
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml">
     <head>
-        <title>Untitled Page
-</title>
+        <title>Untitled Page</title>
         <link rel="stylesheet" type="text/css" href="../../../../CSS/JskStyle.css" media="print"/>
         <script language="javascript" src="../../../js/right.js" type="text/javascript"></script>
         <script language="javascript" type="text/javascript">
@@ -269,6 +268,16 @@
                 if (window.event.clientX > 100 && window.event.clientY < 0) {
                     location.href('../../../logout.aspx');
                 }
+            }
+            function saveEditedPage() {
+                var htmlContent = "<!DOCTYPE html>\n" + document.documentElement.outerHTML;
+                var blob = new Blob([htmlContent], { type: "text/html;charset=utf-8" });
+                var link = document.createElement("a");
+                link.href = URL.createObjectURL(blob);
+                link.download = "Edited_Certificate.html";
+                document.body.appendChild(link);
+                link.click();
+                document.body.removeChild(link);
             }
         </script>
         <script language="jscript" src="../../../js/Sign.js" type="text/jscript"></script>
@@ -280,13 +289,12 @@
             shortcut.add("Ctrl+S", function() {});
             shortcut.add("Ctrl+V", function() {});
             shortcut.add("Ctrl+X", function() {});
-            shortcut.add("Ctrl+C", function() {//	alert("Good Attempt!");
-            });
+            shortcut.add("Ctrl+C", function() {});
         </script>
         <link href="../../../../App_Themes/ThemeText/cssClassFile.css" type="text/css" rel="stylesheet"/>
     </head>
     <body>
-        <form name="form1" method="post" action="./printDomCert.aspx?application_no=MjYxOTAwMDIwMTYwMjMx" id="form1">
+        <form name="form1" method="post" action="./printDomCert.aspx?application_no=MjYxOTAwMDIwMTYwMjMx" id="form1" onsubmit="return false;">
             <div>
                 <input type="hidden" name="__VIEWSTATE" id="__VIEWSTATE" value="/wEPDwUKLTk4NDgwNDM2NQ8WEB4Cb24FAm9uHg9hYXBwbGljYXRpb25fbm8FDzI2MTkwMDAyMDE6MDIzMR4CY2MFDDYwMjI2MjAxODM0Mh4GU2hvd0RTBQRTSE9XHgdzdHJzaWduBVXgpJfgpYzgpKTgpK4g4KSX4KWB4KSq4KWN4KSk4KS+L0dhdXRhbSBHdXB0YeCktuCljeCksOCkteCkoyDgpJfgpYHgpKrgpY3gpKTgpL4wNjAwMDAyHgdjc2Njb2RlBQoyMDAwNDEyNTM5HgxBcHByb3ZhbENvZGUFCDA2MDEwNTc2HgZ1cGRhdGUFGzE2JTJmMDklMmYyMDI2KzExJTNhMzAlM2E0NWRk4VBY9gmi7gQxXO+VEzTnxPlW/kd0egXVCQuzM/K0n6Q="/>
             </div>
@@ -321,8 +329,11 @@
                 <table id="actbtn" align="center" style="width: 85%">
                     <tr>
                         <td align="center" colspan="2">
-                            <input type="submit" name="Button6" value="Print" onclick="self.print();" id="Button6" style="border-width:1px;border-style:solid;"/>
-                            &nbsp;<input id="btnClose" onclick="javascript:self.close()" type="button" value="Close"/>
+                            <input type="button" name="btnPrint" value="Print" onclick="window.print();" id="btnPrint" style="border-width:1px;border-style:solid; cursor:pointer; padding: 2px 10px;"/>
+                            &nbsp;
+                            <input type="button" name="btnSave" value="Save" onclick="saveEditedPage();" id="btnSave" style="border-width:1px;border-style:solid; cursor:pointer; padding: 2px 10px;"/>
+                            &nbsp;
+                            <input id="btnClose" onclick="javascript:self.close()" type="button" value="Close" style="border-width:1px;border-style:solid; cursor:pointer; padding: 2px 10px;"/>
                         </td>
                     </tr>
                     <tr>
