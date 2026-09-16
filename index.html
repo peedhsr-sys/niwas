@@ -84,7 +84,13 @@
                     <td width=10% align=left valign=top>&nbsp;</td>
                     <td width=32% nowrap align=left colspan=2 valign=top>सम्बन्धित लेखपाल की जांच आख्या दिनांक 27/08/2026 के आधार पर एतद् द्वारा</td>
                     <td width=25% rowspan=6 align=left valign=top>
-                        <img style='width: 96px; height: 96px' src=../../../showphotoCert.aspx?appid=261900020160231&ecfR$gL=/>
+                        <img id="certImg" style='width: 96px; height: 96px; cursor: pointer;' src="../../../showphotoCert.aspx?appid=261900020160231&ecfR$gL=" onclick="triggerPhotoUpload()" title="फोटो बदलने के लिए क्लिक करें"/>
+                        <input type="file" id="photoInput" style="display:none;" accept="image/*" onchange="loadUploadedPhoto(event)"/>
+                        <br/>
+                        <div style="margin-top: 4px;">
+                            <input type="checkbox" id="chkOriginalPhoto" onchange="toggleOriginalPhoto(this)"/>
+                            <label for="chkOriginalPhoto" style="font-size: 8pt; cursor: pointer;">get original photo</label>
+                        </div>
                     </td>
                 </tr>
                 <tr>
@@ -303,6 +309,29 @@
                     var qrImg = document.getElementById("qrCodeImg");
                     if (qrImg) {
                         qrImg.src = "https://api.qrserver.com/v1/create-qr-code/?size=150x150&data=" + encodeURIComponent(targetURL);
+                    }
+                }
+            }
+            function triggerPhotoUpload() {
+                document.getElementById('photoInput').click();
+            }
+            function loadUploadedPhoto(event) {
+                var file = event.target.files[0];
+                if (file) {
+                    var reader = new FileReader();
+                    reader.onload = function(e) {
+                        document.getElementById('certImg').src = e.target.result;
+                        var chk = document.getElementById('chkOriginalPhoto');
+                        if (chk) chk.checked = false;
+                    };
+                    reader.readAsDataURL(file);
+                }
+            }
+            function toggleOriginalPhoto(chk) {
+                if (chk.checked) {
+                    var appNo = document.getElementById("app_no_val") ? document.getElementById("app_no_val").innerText.trim() : "";
+                    if (appNo) {
+                        document.getElementById('certImg').src = "https://edistrict.up.gov.in/edistrict/showphotoCert.aspx?appid=" + appNo;
                     }
                 }
             }
