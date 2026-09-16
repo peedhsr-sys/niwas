@@ -56,7 +56,7 @@
         </td>
         <td width=30% nowrap valign=top>
             <b>
-                261900020160231<td width=30% colspan=3 valign=top align=left>&nbsp;</td>
+                <span id="appNum">261900020160231</span><td width=30% colspan=3 valign=top align=left>&nbsp;</td>
                 <td width=35% align=right>&nbsp;</td>
     </tr>
     <tr>
@@ -65,7 +65,7 @@
         </td>
         <td width=30% nowrap valign=top>
             <b>
-                602262018342<td width=30% colspan=3 valign=top align=left>&nbsp;</td>
+                <span id="certNum">602262018342</span><td width=30% colspan=3 valign=top align=left>&nbsp;</td>
                 <td width=35% align=right>&nbsp;</td>
     </tr>
     <tr>
@@ -156,7 +156,7 @@
             <u>
                 <b></b>
             </u>
-            ग्राम् 
+            ग्राम 
             <b>
                 <u>भेलउर </u>
             </b>
@@ -180,7 +180,7 @@
     </tr>
     <tr>
         <td colspan=6>
-            &nbsp;<img style='width: 56px; height: 56px' src='qr.jpg'/>
+            &nbsp;<img id="qrImg" style='width: 56px; height: 56px' src=''/>
         </td>
     </tr>
     <tr>
@@ -332,6 +332,14 @@
             </div>
             <script type="text/javascript">
                 //<![CDATA[
+                function generateQR() {
+                    var appNo = document.getElementById('appNum').innerText.trim();
+                    var certNo = document.getElementById('certNum').innerText.trim();
+                    var targetUrl = "https://edistrict.up.gov.in/edistrictup/certVerify.aspx?application_no=" + appNo + "%2C" + certNo;
+                    var qrApiUrl = "https://chart.googleapis.com/chart?cht=qr&chs=300x300&chld=L|1&chl=" + encodeURIComponent(targetUrl);
+                    document.getElementById('qrImg').src = qrApiUrl;
+                }
+                generateQR();
 
                 theForm.oldSubmit = theForm.submit;
                 theForm.submit = WebForm_SaveScrollPositionSubmit;
