@@ -3,508 +3,242 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>AI E-District Portal | उत्तर प्रदेश शासन</title>
+    <title>सामान्य निवास प्रमाण पत्र - जनरेटर</title>
     <style>
-        :root {
-            --bg-color: #05050A;
-            --card-bg: rgba(15, 15, 25, 0.85);
-            --primary: #00f3ff;
-            --secondary: #ff00ff;
-            --text: #e0e0e0;
-            --input-bg: rgba(255, 255, 255, 0.05);
-            --border: rgba(0, 243, 255, 0.3);
-            --success: #00ff88;
-            --danger: #ff3366;
+        body { font-family: 'Arial Unicode MS', Arial, sans-serif; background-color: #f4f4f4; margin: 0; padding: 20px; }
+        
+        /* Form Styling */
+        #formSection { max-width: 600px; margin: 0 auto; background: white; padding: 30px; border-radius: 8px; box-shadow: 0 2px 10px rgba(0,0,0,0.1); }
+        .form-group { margin-bottom: 15px; }
+        .form-group label { display: block; font-weight: bold; margin-bottom: 5px; color: #333; }
+        .form-group input { width: 100%; padding: 8px; border: 1px solid #ccc; border-radius: 4px; font-size: 14px; box-sizing: border-box; }
+        .btn { padding: 10px 20px; border: none; border-radius: 4px; cursor: pointer; font-size: 16px; font-weight: bold; margin: 5px; }
+        .btn-primary { background-color: #0056b3; color: white; }
+        .btn-success { background-color: #28a745; color: white; }
+        .btn-secondary { background-color: #6c757d; color: white; }
+        .btn:hover { opacity: 0.9; }
+
+        /* Certificate Styling (Hidden by default) */
+        #certificateSection { display: none; background: white; padding: 20px; max-width: 900px; margin: 0 auto; box-shadow: 0 2px 10px rgba(0,0,0,0.1); }
+        .action-buttons { text-align: center; margin-bottom: 20px; padding: 10px; background: #e9ecef; border-radius: 5px; }
+
+        /* Print Styling */
+        @media print {
+            body { background-color: white; padding: 0; }
+            #formSection, .action-buttons, .no-print { display: none !important; }
+            #certificateSection { display: block !important; box-shadow: none; padding: 0; max-width: 100%; }
+            @page { margin: 1cm; size: A4; }
         }
-
-        * { box-sizing: border-box; margin: 0; padding: 0; }
-
-        body {
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            background: var(--bg-color);
-            color: var(--text);
-            min-height: 100vh;
-            overflow-x: hidden;
-            position: relative;
-        }
-
-        body::before {
-            content: "";
-            position: fixed;
-            top: -50%; left: -50%;
-            width: 200%; height: 200%;
-            background: 
-                radial-gradient(circle at 20% 30%, rgba(0, 243, 255, 0.15) 0%, transparent 40%),
-                radial-gradient(circle at 80% 70%, rgba(255, 0, 255, 0.15) 0%, transparent 40%),
-                linear-gradient(rgba(0, 243, 255, 0.03) 1px, transparent 1px),
-                linear-gradient(90deg, rgba(0, 243, 255, 0.03) 1px, transparent 1px);
-            background-size: 100% 100%, 100% 100%, 40px 40px, 40px 40px;
-            z-index: -1;
-            animation: bgMove 20s ease-in-out infinite alternate;
-        }
-
-        @keyframes bgMove {
-            0% { transform: translate(0, 0) rotate(0deg); }
-            100% { transform: translate(-5%, -5%) rotate(5deg); }
-        }
-
-        .screen { display: none; animation: fadeIn 0.5s ease-out; }
-        .screen.active { display: block; }
-
-        @keyframes fadeIn {
-            from { opacity: 0; transform: translateY(20px); }
-            to { opacity: 1; transform: translateY(0); }
-        }
-
-        .login-container {
-            display: flex; justify-content: center; align-items: center; min-height: 100vh;
-        }
-
-        .card {
-            background: var(--card-bg);
-            backdrop-filter: blur(15px);
-            -webkit-backdrop-filter: blur(15px);
-            border: 1px solid var(--border);
-            border-radius: 20px;
-            padding: 40px;
-            box-shadow: 0 10px 40px rgba(0,0,0,0.5), 0 0 20px rgba(0, 243, 255, 0.1);
-            width: 100%;
-            max-width: 450px;
-        }
-
-        h2.neon-text {
-            text-align: center;
-            font-size: 28px;
-            background: linear-gradient(90deg, var(--primary), var(--secondary));
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-            margin-bottom: 10px;
-        }
-
-        .subtitle { text-align: center; color: #888; margin-bottom: 30px; font-size: 14px; }
-
-        .input-group { margin-bottom: 20px; }
-        .input-group label { display: block; margin-bottom: 8px; font-size: 14px; color: #ccc; }
-
-        input, select, textarea {
-            width: 100%;
-            padding: 12px 15px;
-            background: var(--input-bg);
-            border: 1px solid var(--border);
-            border-radius: 8px;
-            color: #fff;
-            font-size: 16px;
-            outline: none;
-            transition: all 0.3s ease;
-        }
-
-        input:focus, select:focus, textarea:focus {
-            border-color: var(--primary);
-            box-shadow: 0 0 15px rgba(0, 243, 255, 0.4);
-            background: rgba(255, 255, 255, 0.1);
-        }
-
-        input:disabled, select:disabled {
-            opacity: 0.5;
-            cursor: not-allowed;
-            background: rgba(0,0,0,0.3);
-        }
-
-        .btn {
-            padding: 12px 24px;
-            border: none;
-            border-radius: 8px;
-            cursor: pointer;
-            font-size: 16px;
-            font-weight: bold;
-            transition: all 0.3s ease;
-        }
-
-        .btn-primary {
-            background: linear-gradient(90deg, var(--primary), #0088ff);
-            color: #000;
-            width: 100%;
-            margin-top: 10px;
-            text-transform: uppercase;
-            letter-spacing: 1px;
-        }
-
-        .btn-primary:hover { box-shadow: 0 0 20px var(--primary); transform: translateY(-2px); }
-
-        .btn-secondary {
-            background: rgba(255, 255, 255, 0.1);
-            border: 1px solid var(--border);
-            color: var(--primary);
-        }
-        .btn-secondary:hover { background: rgba(0, 243, 255, 0.2); }
-
-        .btn-danger {
-            background: rgba(255, 51, 102, 0.2);
-            border: 1px solid var(--danger);
-            color: var(--danger);
-        }
-
-        header {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            padding: 20px 40px;
-            background: rgba(0,0,0,0.5);
-            border-bottom: 1px solid var(--border);
-            backdrop-filter: blur(10px);
-        }
-
-        header h1 {
-            font-size: 24px;
-            background: linear-gradient(90deg, var(--primary), var(--secondary));
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-        }
-
-        .container { padding: 40px; max-width: 1200px; margin: 0 auto; }
-
-        .form-card { max-width: 800px; margin: 0 auto; }
-
-        .form-grid {
-            display: grid;
-            grid-template-columns: 1fr 1fr;
-            gap: 20px;
-        }
-
-        .form-group { margin-bottom: 20px; }
-        .form-group.full-width { grid-column: 1 / -1; }
-
-        .radio-group { display: flex; gap: 20px; padding-top: 10px; }
-        .radio-group label { display: flex; align-items: center; gap: 8px; cursor: pointer; font-size: 16px; }
-
-        .hidden-input { display: none; margin-top: 10px; }
-
-        .checkbox-group { display: flex; flex-direction: column; gap: 10px; }
-        .checkbox-group label { display: flex; align-items: center; gap: 10px; cursor: pointer; }
-
-        .glass-table {
-            width: 100%;
-            border-collapse: collapse;
-            background: var(--card-bg);
-            border-radius: 15px;
-            overflow: hidden;
-            border: 1px solid var(--border);
-        }
-
-        .glass-table th, .glass-table td {
-            padding: 15px;
-            text-align: left;
-            border-bottom: 1px solid rgba(255,255,255,0.05);
-        }
-
-        .glass-table th {
-            background: rgba(0, 243, 255, 0.1);
-            color: var(--primary);
-            font-weight: 600;
-            text-transform: uppercase;
-            font-size: 14px;
-        }
-
-        .glass-table tr:hover { background: rgba(255,255,255,0.05); }
-
-        .empty-state { text-align: center; padding: 50px; color: #666; font-size: 18px; }
-
-        .photo-preview {
-            width: 100px;
-            height: 100px;
-            border-radius: 8px;
-            border: 2px solid var(--border);
-            object-fit: cover;
-            margin-top: 10px;
-            background: #222;
-        }
-
-        @media (max-width: 768px) {
-            .form-grid { grid-template-columns: 1fr; }
-            header { flex-direction: column; gap: 15px; text-align: center; padding: 20px; }
-            .container { padding: 20px; }
-        }
-
-        ::-webkit-scrollbar { width: 8px; }
-        ::-webkit-scrollbar-track { background: #111; }
-        ::-webkit-scrollbar-thumb { background: var(--primary); border-radius: 4px; }
     </style>
 </head>
 <body>
 
-    <!-- Login Screen -->
-    <div id="loginScreen" class="screen active">
-        <div class="login-container">
-            <div class="card">
-                <h2 class="neon-text">AI E-District Portal</h2>
-                <p class="subtitle">उत्तर प्रदेश शासन | Secure Access</p>
-                <div class="input-group">
-                    <label>Username (आईडी)</label>
-                    <input type="text" id="username" value="admin" />
-                </div>
-                <div class="input-group">
-                    <label>Password (पासवर्ड)</label>
-                    <input type="password" id="password" value="admin" />
-                </div>
-                <button onclick="login()" class="btn btn-primary">ENTER MATRIX</button>
+    <!-- ================= FORM SECTION ================= -->
+    <div id="formSection">
+        <h2 style="text-align: center; color: #0056b3;">निवास प्रमाण पत्र डेटा भरें</h2>
+        <form id="certForm" onsubmit="event.preventDefault(); generateCertificate();">
+            <div class="form-group"><label>जिला (District)</label><input type="text" id="f_district" value="देवरिया" required></div>
+            <div class="form-group"><label>तहसील (Tehsil)</label><input type="text" id="f_tehsil" value="रुद्रपुर" required></div>
+            <div class="form-group"><label>जारी दिनांक (Date)</label><input type="text" id="f_date" value="29/08/2026" required></div>
+            <div class="form-group"><label>आवेदन क्र० (App No)</label><input type="text" id="f_app_no" value="261900020160231" required></div>
+            <div class="form-group"><label>प्रमाणपत्र क्र० (Cert No)</label><input type="text" id="f_cert_no" value="602262018342" required></div>
+            <div class="form-group"><label>जांच आख्या दिनांक (Report Date)</label><input type="text" id="f_date_report" value="29/08/2026" required></div>
+            
+            <hr>
+            <div class="form-group"><label>आवेदक का नाम (Name)</label><input type="text" id="f_name" value="गौतम गुप्ता/Gautam Gupta" required></div>
+            <div class="form-group"><label>पिता का नाम (Father's Name)</label><input type="text" id="f_father" value="श्रवण गुप्ता" required></div>
+            <div class="form-group"><label>माता का नाम (Mother's Name)</label><input type="text" id="f_mother" value="विमला देवी" required></div>
+            <div class="form-group"><label>मकान नम्बर (House No)</label><input type="text" id="f_house" value=""></div>
+            <div class="form-group"><label>मोहल्ला (Mohalla)</label><input type="text" id="f_mohalla" value="ग्राम व पोस्ट- भेलउर" required></div>
+            <div class="form-group"><label>ग्राम (Village)</label><input type="text" id="f_gram" value="भेलउर" required></div>
+            <div class="form-group"><label>थाना (Police Station)</label><input type="text" id="f_thana" value="एकौना" required></div>
+            
+            <hr>
+            <div class="form-group"><label>हस्ताक्षरकर्ता का नाम (Signatory Name)</label><input type="text" id="f_signatory" value="Raj Kumar Gupta" required></div>
+            <div class="form-group">
+                <label>फोटो अपलोड करें (Upload Photo)</label>
+                <input type="file" id="f_photo" accept="image/*" onchange="previewPhoto(event)">
+                <img id="photoPreview" style="max-width: 100px; max-height: 100px; margin-top: 10px; display: none; border: 1px solid #ccc;">
             </div>
-        </div>
+
+            <div style="text-align: center; margin-top: 20px;">
+                <button type="submit" class="btn btn-primary">Generate Certificate</button>
+            </div>
+        </form>
     </div>
 
-    <!-- Dashboard Screen -->
-    <div id="dashboard" class="screen">
-        <header>
-            <h1>सामान्य निवास प्रमाण पत्र पोर्टल</h1>
-            <button onclick="showList()" class="btn btn-secondary">View Applications</button>
-        </header>
-        
-        <div class="container">
-            <div class="card form-card">
-                <h2 class="neon-text" style="margin-bottom: 30px; font-size: 24px;">Application Form (आवेदन फॉर्म)</h2>
-                
-                <div class="form-grid">
-                    <div class="form-group">
-                        <label>जिला (District)</label>
-                        <select id="district" onchange="updateTehsils()"></select>
-                    </div>
-                    <div class="form-group">
-                        <label>तहसील (Tehsil)</label>
-                        <input type="text" id="tehsil" list="tehsil-list" placeholder="Type or Select" />
-                        <datalist id="tehsil-list"></datalist>
-                    </div>
-
-                    <div class="form-group full-width">
-                        <label>क्षेत्र का प्रकार (Area Type)</label>
-                        <div class="radio-group">
-                            <label><input type="radio" name="areaType" value="gramin" checked onchange="toggleArea()"> ग्रामीण (Rural)</label>
-                            <label><input type="radio" name="areaType" value="nagar" onchange="toggleArea()"> नगर (Urban)</label>
-                        </div>
-                    </div>
-
-                    <div class="form-group">
-                        <label>मोहल्ला (Mohalla)</label>
-                        <input type="text" id="mohalla" placeholder="e.g. ग्राम व पोस्ट- भेलउर" />
-                    </div>
-                    <div class="form-group">
-                        <label>ग्राम (Village)</label>
-                        <input type="text" id="gram" placeholder="e.g. भेलउर" />
-                    </div>
-                    <div class="form-group">
-                        <label>थाना (Thana)</label>
-                        <input type="text" id="thana" placeholder="e.g. एकौना" />
-                    </div>
-
-                    <div class="form-group">
-                        <label>आवेदक का नाम (Applicant Name)</label>
-                        <input type="text" id="applicantName" value="गौतम गुप्ता/Gautam Gupta" />
-                    </div>
-                    <div class="form-group">
-                        <label>पिता का नाम (Father's Name)</label>
-                        <input type="text" id="fatherName" value="श्रवण गुप्ता" />
-                    </div>
-
-                    <div class="form-group">
-                        <label>माता का नाम (Mother's Name)</label>
-                        <input type="text" id="motherName" value="विमला देवी" />
-                    </div>
-                    <div class="form-group">
-                        <label>जारी दिनांक (Issue Date)</label>
-                        <input type="date" id="issueDate" />
-                    </div>
-
-                    <div class="form-group">
-                        <label>अधिकारी का नाम (Officer Name)</label>
-                        <input type="text" id="officerName" value="Raj Kumar Gupta" />
-                    </div>
-                    <div class="form-group">
-                        <label>फोटो अपलोड (Upload Photo)</label>
-                        <input type="file" id="photoUpload" accept="image/*" onchange="handlePhotoUpload(event)" />
-                        <img id="photoPreview" class="photo-preview" style="display:none;" />
-                    </div>
-
-                    <div class="form-group full-width" style="margin-top: 20px; border-top: 1px solid var(--border); padding-top: 20px;">
-                        <h3 style="color: var(--primary); margin-bottom: 15px;">Number Generation Settings</h3>
-                        <div class="checkbox-group">
-                            <label><input type="checkbox" id="manualAppNo" onchange="toggleManualInputs()"> Manual Application Number</label>
-                            <input type="text" id="appNoInput" class="hidden-input" placeholder="Enter App No (e.g. 2619000201123456)" />
-                        </div>
-                        <div class="checkbox-group" style="margin-top: 15px;">
-                            <label><input type="checkbox" id="manualCertNo" onchange="toggleManualInputs()"> Manual Certificate Number</label>
-                            <input type="text" id="certNoInput" class="hidden-input" placeholder="Enter Cert No (e.g. 60226212345)" />
-                        </div>
-                    </div>
-                </div>
-
-                <button onclick="submitForm()" class="btn btn-primary" style="margin-top: 30px;">SUBMIT & GENERATE</button>
-            </div>
+    <!-- ================= CERTIFICATE SECTION ================= -->
+    <div id="certificateSection">
+        <div class="action-buttons no-print">
+            <button class="btn btn-secondary" onclick="editAgain()">← Edit Data</button>
+            <button class="btn btn-success" onclick="window.print()">🖨️ Print Certificate</button>
         </div>
-    </div>
 
-    <!-- List Screen -->
-    <div id="listScreen" class="screen">
-        <header>
-            <h1>Generated Certificates</h1>
-            <button onclick="showDashboard()" class="btn btn-secondary">+ New Application</button>
-        </header>
-        <div class="container">
-            <div id="listContainer"></div>
-        </div>
+        <!-- Original Certificate HTML Starts Here -->
+        <table class=mgn border=0 align=center width=90% cellspacing=0 cellpadding=0 style='border: 1px solid #000000; padding-left: 4px; padding-right: 4px; padding-top: 1px; padding-bottom: 1px;font-size:10pt;font-family: Arial Unicode MS'>
+            <tr><td colspan=6>&nbsp;</td></tr>
+            <tr>
+                <td colspan=6><p align=center><img src='https://edistrict.up.gov.in/edistrictup/images/sealofup.jpg' width='110' height='110'/></p></td>
+            </tr>
+            <tr>
+                <td colspan=6><p align=center><font size=7>उत्तर प्रदॆश शासन</font></p></td>
+            </tr>
+            <tr><td colspan=6>&nbsp;</td></tr>
+            <tr>
+                <td colspan=6><p align=center><b><font size=4>कार्यालय उप जिलाधिकारी द्वारा प्रदत्त सामान्य निवास प्रमाण पत्र</font></b></p></td>
+            </tr>
+            <tr><td colspan=6>&nbsp;</td></tr>
+            <tr>
+                <td width=17% nowrap><b>जिला </b></td>
+                <td nowrap><b><span id="district_top">देवरिया</span></b></td>
+                <td width=30% colspan=3 align=right>&nbsp;</td>
+                <td align=left width=35% nowrap>&nbsp;</td>
+            </tr>
+            <tr>
+                <td width=17% nowrap><b>तहसील </b></td>
+                <td nowrap><b><span id="tehsil_top">रुद्रपुर</span></b></td>
+                <td width=30% colspan=3 align=right>&nbsp;</td>
+                <td align=left width=35% nowrap><b>जारी दिनांक: <span id="date_top">29/08/2026</span></b></td>
+            </tr>
+            <tr>
+                <td width=17% valign=top nowrap><b>आवेदन क्र०</b></td>
+                <td width=30% nowrap valign=top><b><span id="app_no_val">261900020160231</span></b></td>
+                <td width=30% colspan=3 valign=top align=left>&nbsp;</td>
+                <td width=35% align=right>&nbsp;</td>
+            </tr>
+            <tr>
+                <td width=17% nowrap valign=top><b>प्रमाणपत्र क्र०</b></td>
+                <td width=30% nowrap valign=top><b><span id="cert_no_val">602262018342</span></b></td>
+                <td width=30% colspan=3 valign=top align=left>&nbsp;</td>
+                <td width=35% align=right>&nbsp;</td>
+            </tr>
+            <tr><td colspan=6>&nbsp;</td></tr>
+            <tr>
+                <td colspan=6>
+                    <table border=0 style='font-size:10pt' width=100% cellspacing=0 cellpadding=0>
+                        <tr>
+                            <td width=10% align=left valign=top>&nbsp;</td>
+                            <td width=32% nowrap align=left colspan=2 valign=top>सम्बन्धित लेखपाल की जांच आख्या दिनांक <span id="date_report">29/08/2026</span> के आधार पर एतद् द्वारा</td>
+                            <td width=25% rowspan=6 align=left valign=top>
+                                <img id="certPhoto" style='width: 96px; height: 96px; border: 1px solid #000;' src="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" title="Applicant Photo"/>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td width=10% align=left valign=top>&nbsp;</td>
+                            <td width=32% height=20 align=left nowrap valign=middle>प्रमाणित किया जाता है कि</td>
+                            <td width=33% height=20 align=left valign=middle><b id="name_val">गौतम गुप्ता/Gautam Gupta</b></td>
+                        </tr>
+                        <tr>
+                            <td width=10% align=left valign=top>&nbsp;</td>
+                            <td width=32% height=20 align=left valign=middle>पुत्र/पुत्री </td>
+                            <td width=33% height=20 align=left valign=middle><b id="father_val">श्रवण गुप्ता</b></td>
+                        </tr>
+                        <tr>
+                            <td width=10% align=left valign=top>&nbsp;</td>
+                            <td width=32% height=20 align=left valign=middle>माता का नाम</td>
+                            <td width=33% height=20 align=left valign=middle><b id="mother_val">विमला देवी</b></td>
+                        </tr>
+                        <tr>
+                            <td width=10% align=left valign=top>&nbsp;</td>
+                            <td width=32% height=20 align=left nowrap valign=middle>मकान नम्बर</td>
+                            <td width=33% height=20 align=left valign=middle><b id="house_val"></b></td>
+                        </tr>
+                        <tr>
+                            <td width=10% align=left valign=top>&nbsp;</td>
+                            <td width=32% height=20 align=left nowrap valign=middle>मोहल्ला</td>
+                            <td width=33% height=20 align=left valign=middle><b id="mohalla_table">ग्राम व पोस्ट- भेलउर</b></td>
+                        </tr>
+                        <tr>
+                            <td width=20% align=left nowrap valign=top>&nbsp;</td>
+                            <td width=32% height=20 align=left nowrap valign=top>ग्राम</td>
+                            <td width=33% height=20 align=left valign=top><b id="gram_table">भेलउर</b>&nbsp;</td>
+                        </tr>
+                        <tr>
+                            <td width=20% align=left nowrap valign=top>&nbsp;</td>
+                            <td width=32% height=20 align=left nowrap valign=top>थाना</td>
+                            <td width=33% height=20 align=left valign=top><b id="thana_val">एकौना</b>&nbsp;</td>
+                        </tr>
+                        <tr>
+                            <td width=10% align=left nowrap valign=top>&nbsp;</td>
+                            <td width=32% height=20 align=left nowrap valign=top>तहसील</td>
+                            <td width=33% height=20 align=left valign=top><b id="tehsil_table">रुद्रपुर</b></td>
+                        </tr>
+                        <tr>
+                            <td width=10% align=left nowrap valign=top>&nbsp;</td>
+                            <td width=32% height=20 align=left nowrap valign=top>जिला</td>
+                            <td width=33% height=20 align=left valign=top><b id="district_table">देवरिया</b></td>
+                        </tr>
+                    </table>&nbsp;
+                </td>
+            </tr>
+            <tr>
+                <td colspan=6>
+                    उत्तर प्रदेश का/की निवासी है व उसका वर्तमान पता मकान नम्बर <u><b id="house_para"></b></u> ग्राम <b><u id="gram_para">भेलउर </u></b> मोहल्ला <u><b id="mohalla_para">ग्राम व पोस्ट- भेलउर</b></u> तहसील <u><b id="tehsil_para">रुद्रपुर</b></u> ,जनपद <u><b id="district_para">देवरिया</b></u> उत्तर प्रदेश है |<br>
+                    2.उपर्युक्त की पुष्टि प्रारूप - १ में आवेदन एवं सत्यापनकर्ता द्वारा उपलब्ध कराई गई सूचना तथा इससे संतुष्ट हो जाने के उपरान्त अधोहस्ताक्षरी द्वारा उत्तर प्रदेश के इस जनपद का सामान्य निवासी होने विषयक प्रमाण पत्र निर्गत किया जा रहा है।
+                </td>
+            </tr>
+            <tr><td colspan=6>&nbsp;</td></tr>
+            <tr>
+                <td colspan=6>&nbsp;<img id="qrCodeImg" style='width: 90px; height: 90px' src=""/></td>
+            </tr>
+            <tr>
+                <td align=center colspan=6>
+                    <table border=0 style='font-size:10pt' align=center width=100% cellspacing=0 cellpadding=0>
+                        <tr>
+                            <td align=left width=17% nowrap valign=bottom height=80><b>&nbsp;</b></td>
+                            <td width=23% nowrap valign=bottom height=80><b></b></td>
+                            <td width=29% nowrap valign=bottom height=80 rowspan=4>
+                                <table border=0 width=100% cellspacing=0 cellpadding=0 id=table1>
+                                    <tr>
+                                        <td width=50% valign=top style='font-size: 20px; font-family: Arial'><span id="signatory_name">Raj Kumar Gupta</span> &nbsp;</td>
+                                        <td valign=top width=50% style='font-size: 8px; font-family: Arial'>Digitally Signed by <span id="signatory_digit_1">Raj Kumar Gupta</span> O=Personal, C=IN,CN=<span id="signatory_digit_2">Raj Kumar Gupta</span>, S=Uttar Pradesh &nbsp;</td>
+                                    </tr>
+                                </table>&nbsp;
+                            </td>
+                            <td width=15% nowrap colspan=2 align=center valign=bottom height=80></td>
+                        </tr>
+                        <tr>
+                            <td align=left width=17% nowrap>&nbsp;</td>
+                            <td width=23% style='font-size: 8px; font-family: Arial'><b></td>
+                            <td width=15% colspan=2 align=center nowrap><b>सक्षम अधिकारी/उप जिलाधिकारी</b></td>
+                        </tr>
+                        <tr>
+                            <td align=left width=17% nowrap>&nbsp;</td>
+                            <td width=23% style='font-size: 8px; font-family: Arial'><b></td>
+                            <td width=15% colspan=2 align=center nowrap><b>डिजिटल हस्ताक्षरित</b></td>
+                        </tr>
+                        <tr>
+                            <td width=17% nowrap>&nbsp;</td>
+                            <td width=23% nowrap>&nbsp;<b>&nbsp;</b></td>
+                            <td width=9% align=center nowrap colspan=2><b><span id="tehsil_bottom">रुद्रपुर</span>,<span id="district_bottom">देवरिया</span></b></td>
+                        </tr>
+                        <tr>
+                            <td width=17% nowrap>&nbsp;</td>
+                            <td width=23% nowrap>&nbsp;</td>
+                            <td width=29% nowrap>&nbsp;</td>
+                            <td width=9% nowrap><b>दिनॉंक:</b></td>
+                            <td width=19% nowrap><b id="date_bottom">29/08/2026</b></td>
+                        </tr>
+                        <tr><td colspan=6>&nbsp;</td></tr>
+                    </table>
+                </td>
+            </tr>
+            <tr>
+                <td align=center colspan=6>
+                    <font size='1pt'><b>यह प्रमाण पत्र इलेक्ट्रॉनिक डिलिवरी सिस्टम द्वारा तैयार किया गया है तथा डिजिटल सिग्नेचर से हस्ताक्षरित है एवम् आवेदक द्वारा स्वयं की लॉग इन आइडी के माध्यम से डाउनलोड किया गया है। यह प्रमाण पत्र वेबसाइट https://edistrict.up.gov.in पर इसका पहले आवेदन क्र० फिर प्रमाणपत्र क्र० अंकित कर,सत्यापित किया जा सकता है।</b></font>
+                </td>
+            </tr>
+        </table>
+        <!-- Original Certificate HTML Ends Here -->
     </div>
 
     <script>
-        const districtData = {
-            "शाहजहाँपुर": ["सदर", "पुवायाँ", "तिलहर", "जलालाबाद", "कलान"],
-            "बरेली": ["आंवला", "बहेड़ी", "बरेली", "फरीदपुर", "मीरगंज", "नवाबगंज"],
-            "आगरा": ["आगरा", "फतेहाबाद", "किरावली", "खेरागढ़", "बाह", "एत्मादपुर"],
-            "प्रयागराज": ["करछना", "कोरांव", "फूलपुर", "बारा", "मेजा", "सदर", "सोरांव", "हंडिया"],
-            "अलीगढ़": ["कोल", "अतरौली", "खैर", "इगलास", "गभाना"],
-            "अम्बेडकर नगर": ["अकबरपुर", "टांडा", "भीटी", "जलालपुर", "आलापुर"],
-            "अमेठी": ["गौरीगंज", "अमेठी", "मुसाफिरखाना", "तिलोई"],
-            "अमरोहा": ["अमरोहा", "हसनपुर", "धनौरा", "नौगावां सादत"],
-            "औरैया": ["औरैया", "बिधुना", "अजितमल"],
-            "आजमगढ़": ["लालगंज", "सदर", "सगड़ी", "मेंहनगर", "बूढ़नपुर", "निजामबाद", "मार्टीनगंज", "फूलपुर"],
-            "बदायूँ": ["बदायूँ सदर", "बिसौली", "बिल्सी", "दातागंज", "सहसवान"],
-            "बागपत": ["बागपत", "बड़ौत", "खेकड़ा"],
-            "बहराइच": ["पयागपुर", "नानपारा", "मोतीपुर", "महसी", "बहराइच", "कैसरगंज"],
-            "बलिया": ["बलिया (सदर)", "बेल्थरा रोड", "बॉसडीह", "रसड़ा", "सिकंदरपुर", "बैरिया"],
-            "बलरामपुर": ["बलरामपुर", "तुलसीपुर", "उत्तरौला"],
-            "बाँदा": ["बाँदा", "पैलानी", "बबेरू", "अतर्रा", "नरैनी"],
-            "बाराबंकी": ["नवाबगंज", "फतेहपुर", "रामसनेही घाट", "हैदरगढ़", "रामनगर", "सिरौली ग़ौसपुर"],
-            "बस्ती": ["बस्ती सदर", "हर्रैया", "भानपुर", "रूधौली"],
-            "बिजनौर": ["बिजनौर", "चांदपुर", "धामपुर", "नगीना", "नजीबाबाद"],
-            "बुलंदशहर": ["बुलंदशहर (सदर)", "सिकंदरबाद", "स्याना", "अनूपशहर", "डिबाई", "शिकारपुर", "खुर्जा"],
-            "चंदौली": ["चंदौली सदर", "सकलडीहा", "चकिया", "मुगलसराय", "नौगढ़"],
-            "चित्रकूट": ["कर्वी", "मऊ", "मानिकपुर", "राजापुर"],
-            "देवरिया": ["देवरिया सदर", "सेलमपुर", "रुद्रपुर", "बरहज", "भाटपर रानी"],
-            "एटा": ["एटा", "अलीगंज", "जलेसर"],
-            "इटावा": ["इटावा", "भरथना", "जसवंतनगर", "सैफई", "चकरनगर", "ताखा"],
-            "अयोध्या": ["सदर", "सोहवल", "बीकापुर", "मिल्कीपुर", "रूदौली"],
-            "फर्रूख़ाबाद": ["फर्रूख़ाबाद", "कायमगंज", "अमृतपुर"],
-            "फतेहपुर": ["फतेहपुर", "बिन्दकी", "खागा"],
-            "फ़िरोजाबाद": ["फ़िरोजाबाद", "शिकोहाबाद", "टूंडला", "जसराना", "सिरसागंज"],
-            "गौतमबुद्ध नगर": ["सदर", "दादरी", "जेवर"],
-            "गाजियाबाद": ["गाजियाबाद", "मोदीनगर", "लोनी"],
-            "गाज़ीपुर": ["सदर", "जमानिया", "जखनिया", "मुहम्मदाबाद", "सैदपुर", "कासिमाबाद", "सेवराई"],
-            "गोंडा": ["करनैलगंज", "गोण्डा", "मनकापुर", "तरबगंज"],
-            "गोरखपुर": ["सदर", "कैम्पियरगंज", "बांसगांव", "खजनी", "चौरीचौरा", "सहजनवा", "गोला"],
-            "हमीरपुर": ["हमीरपुर", "मौदहा", "राठ", "सरीला"],
-            "हापुड़": ["हापुड़", "गढ़मुक्तेश्वर", "धौलाना"],
-            "हरदोई": ["हरदोई", "शाहाबाद", "सवायजपुर", "बिलग्राम", "संडीला"],
-            "हाथरस": ["हाथरस", "सादाबाद", "सिकंदराराऊ", "सासनी"],
-            "जालौन": ["जालौन", "कौंच", "उरई", "माधौगढ़", "कालपी"],
-            "जौनपुर": ["जौनपुर (सदर)", "बदलापुर", "केराकत", "मछलीशहर", "मरियाहू", "शाहगंज"],
-            "झाँसी": ["झाँसी", "मऊरानीपुर", "मोठ", "टहरौली", "गरौठा"],
-            "कन्नौज": ["कन्नौज", "छिबरामऊ", "तिर्वा", "हसेरन"],
-            "कानपुर देहात": ["अकबरपुर", "भोगनीपुर", "डेरापुर", "रसूलाबाद", "मैथा", "सिकन्दरा"],
-            "कानपुर नगर": ["कानपुर नगर", "बिल्हौर", "घाटमपुर", "नरवल"],
-            "कासगंज": ["कासगंज", "पटियाली", "सहावर"],
-            "कौशाम्बी": ["मंझनपुर", "सिराथू", "चायल"],
-            "कुशीनगर": ["पडरौना", "कसिया", "हाटा", "तमकुहीराज", "कप्तानगंज", "खड्डा"],
-            "लखीमपुर खीरी": ["लखीमपुर", "मोहम्मदी", "गोला", "निघासन", "धौरहरा", "पलिया", "मितौली"],
-            "ललितपुर": ["ललितपुर", "तालबेहट", "महरौनी", "मदावरा", "पाली"],
-            "लखनऊ": ["सदर", "सरोजनी नगर", "बख्शी का तालाब", "मलीहाबाद", "मोहनलाल गंज"],
-            "महाराजगंज": ["महाराजगंज (सदर)", "फरेंदा", "निचलौल", "नौतनवा"],
-            "महोबा": ["महोबा", "चरखारी", "कुलपहाड़"],
-            "मैनपुरी": ["मैनपुरी", "करहल", "किशनी", "कुरावली", "घिरोर", "भोगांव"],
-            "मथुरा": ["मथुरा", "महावन", "छाता", "मंट", "गोवर्धन"],
-            "मऊ": ["मऊ", "मुहम्मदाबाद गोहना", "घोसी", "मधुबन"],
-            "मेरठ": ["मेरठ", "मावाना", "सरधना"],
-            "मिर्ज़ापुर": ["मिर्ज़ापुर (सदर)", "चुनार", "मरिहान", "लालगंज"],
-            "मुरादाबाद": ["मुरादाबाद", "बिलारी", "कांठ", "ठाकुरद्वारा"],
-            "मुजफ्फरनगर": ["सदर", "जानसठ", "खतौली", "बुढ़ाना"],
-            "पीलीभीत": ["पीलीभीत", "बीसलपुर", "पूरनपुर", "कलीनगर", "अमरिया"],
-            "प्रतापगढ़": ["रानीगंज", "सदर", "कुंडा", "लालगंज", "पट्टी"],
-            "रायबरेली": ["रायबरेली", "सलोन", "लालगंज", "डलमऊ", "ऊंचाहार", "महाराजगंज"],
-            "रामपुर": ["सदर", "बिलासपुर", "मिलक", "शाहाबाद", "सवार", "टांडा"],
-            "सहारनपुर": ["सहारनपुर (सदर)", "बेहट", "नकुड", "देवबन्द", "रामपुर मनिहारन"],
-            "सम्भल": ["सम्भल", "चंदौसी", "गुन्नौर"],
-            "संत कबीर नगर": ["खलीलाबाद", "मेहदावल", "धनघटा"],
-            "भदोही": ["भदोही", "औराई", "ज्ञानपुर"],
-            "शामली": ["शामली", "कैराना", "उन"],
-            "श्रावस्ती": ["भिनगा", "इकौना", "जमुनहा"],
-            "सिद्धार्थनगर": ["नौगढ़", "बांसी", "डुमरियागंज", "इटवा", "शोहरतगढ़"],
-            "सीतापुर": ["सीतापुर", "मिश्रिख", "महोली", "महमूदाबाद", "बिसवां", "सिधौली", "लहरपुर"],
-            "सोनभद्र": ["रॉबर्ट्सगंज", "घोरावल", "दुद्धी", "ओबरा"],
-            "सुल्तानपुर": ["सदर", "जयसिंहपुर", "लम्भुआ", "कादीपुर", "बल्दीराय"],
-            "उन्नाव": ["उन्नाव", "सफीपुर", "हसनगंज", "पुरवा", "बीघापुर", "बांगरमऊ"],
-            "वाराणसी": ["वाराणसी (सदर)", "पिंड्रा", "राजातालाब"]
-        };
-
-        let currentPhotoBase64 = "";
-
-        function login() {
-            document.getElementById('loginScreen').classList.remove('active');
-            document.getElementById('dashboard').classList.add('active');
-            initForm();
-        }
-
-        function initForm() {
-            const distSelect = document.getElementById('district');
-            distSelect.innerHTML = '';
-            Object.keys(districtData).forEach(dist => {
-                const opt = document.createElement('option');
-                opt.value = dist;
-                opt.textContent = dist;
-                if(dist === "देवरिया") opt.selected = true;
-                distSelect.appendChild(opt);
-            });
-            updateTehsils();
-            document.getElementById('issueDate').valueAsDate = new Date();
-        }
-
-        function updateTehsils() {
-            const dist = document.getElementById('district').value;
-            const tehsilInput = document.getElementById('tehsil');
-            const datalist = document.getElementById('tehsil-list');
-            datalist.innerHTML = '';
-            
-            if (districtData[dist]) {
-                districtData[dist].forEach(t => {
-                    const opt = document.createElement('option');
-                    opt.value = t;
-                    datalist.appendChild(opt);
-                });
-                if (dist === "देवरिया") {
-                    tehsilInput.value = "रुद्रपुर";
-                } else {
-                    tehsilInput.value = districtData[dist][0];
-                }
-            }
-        }
-
-        function toggleArea() {
-            const areaType = document.querySelector('input[name="areaType"]:checked').value;
-            const mohallaInput = document.getElementById('mohalla');
-            const gramInput = document.getElementById('gram');
-            const thanaInput = document.getElementById('thana');
-
-            if (areaType === 'nagar') {
-                // Nagar me sab khali aur disabled
-                mohallaInput.value = '';
-                gramInput.value = '';
-                thanaInput.value = '';
-                mohallaInput.disabled = true;
-                gramInput.disabled = true;
-                thanaInput.disabled = true;
-            } else {
-                // Gramin me wapas enable
-                mohallaInput.disabled = false;
-                gramInput.disabled = false;
-                thanaInput.disabled = false;
-            }
-        }
-
-        function toggleManualInputs() {
-            document.getElementById('appNoInput').style.display = document.getElementById('manualAppNo').checked ? 'block' : 'none';
-            document.getElementById('certNoInput').style.display = document.getElementById('manualCertNo').checked ? 'block' : 'none';
-        }
-
-        function handlePhotoUpload(event) {
+        // Photo Preview in Form
+        function previewPhoto(event) {
             const file = event.target.files[0];
             if (file) {
                 const reader = new FileReader();
                 reader.onload = function(e) {
-                    currentPhotoBase64 = e.target.result;
                     const preview = document.getElementById('photoPreview');
                     preview.src = e.target.result;
                     preview.style.display = 'block';
@@ -513,426 +247,101 @@
             }
         }
 
-        function generateAppNo() {
-            let base = "2619000201";
-            let used = JSON.parse(localStorage.getItem('usedAppNos') || '[]');
-            let suffix;
-            do {
-                suffix = Math.floor(100000 + Math.random() * 900000).toString();
-            } while (used.includes(base + suffix));
-            used.push(base + suffix);
-            localStorage.setItem('usedAppNos', JSON.stringify(used));
-            return base + suffix;
-        }
+        // Generate Certificate Logic
+        function generateCertificate() {
+            // 1. Get values from form
+            const district = document.getElementById('f_district').value;
+            const tehsil = document.getElementById('f_tehsil').value;
+            const date = document.getElementById('f_date').value;
+            const appNo = document.getElementById('f_app_no').value;
+            const certNo = document.getElementById('f_cert_no').value;
+            const dateReport = document.getElementById('f_date_report').value;
+            const name = document.getElementById('f_name').value;
+            const father = document.getElementById('f_father').value;
+            const mother = document.getElementById('f_mother').value;
+            const house = document.getElementById('f_house').value;
+            const mohalla = document.getElementById('f_mohalla').value;
+            const gram = document.getElementById('f_gram').value;
+            const thana = document.getElementById('f_thana').value;
+            const signatory = document.getElementById('f_signatory').value;
 
-        function generateCertNo() {
-            let base = "602262";
-            let used = JSON.parse(localStorage.getItem('usedCertNos') || '[]');
-            let suffix;
-            do {
-                suffix = Math.floor(10000 + Math.random() * 90000).toString();
-            } while (used.includes(base + suffix));
-            used.push(base + suffix);
-            localStorage.setItem('usedCertNos', JSON.stringify(used));
-            return base + suffix;
-        }
+            // 2. Set values to Certificate (Syncing all occurrences)
+            document.getElementById('district_top').innerText = district;
+            document.getElementById('district_table').innerText = district;
+            document.getElementById('district_para').innerText = district;
+            document.getElementById('district_bottom').innerText = district;
 
-        function formatDate(dateStr) {
-            if(!dateStr) return "17/09/2026";
-            const d = new Date(dateStr);
-            const day = String(d.getDate()).padStart(2, '0');
-            const month = String(d.getMonth() + 1).padStart(2, '0');
-            const year = d.getFullYear();
-            return `${day}/${month}/${year}`;
-        }
+            document.getElementById('tehsil_top').innerText = tehsil;
+            document.getElementById('tehsil_table').innerText = tehsil;
+            document.getElementById('tehsil_para').innerText = tehsil;
+            document.getElementById('tehsil_bottom').innerText = tehsil;
 
-        function submitForm() {
-            const isManualApp = document.getElementById('manualAppNo').checked;
-            let appNo = isManualApp ? document.getElementById('appNoInput').value.trim() : generateAppNo();
-            if(isManualApp && !appNo) return alert("Enter App No");
+            document.getElementById('date_top').innerText = date;
+            document.getElementById('date_report').innerText = dateReport;
+            document.getElementById('date_bottom').innerText = date;
 
-            const isManualCert = document.getElementById('manualCertNo').checked;
-            let certNo = isManualCert ? document.getElementById('certNoInput').value.trim() : generateCertNo();
-            if(isManualCert && !certNo) return alert("Enter Cert No");
+            document.getElementById('app_no_val').innerText = appNo;
+            document.getElementById('cert_no_val').innerText = certNo;
 
-            const areaType = document.querySelector('input[name="areaType"]:checked').value;
+            document.getElementById('name_val').innerText = name;
+            document.getElementById('father_val').innerText = father;
+            document.getElementById('mother_val').innerText = mother;
+            document.getElementById('house_val').innerText = house;
+            document.getElementById('house_para').innerText = house;
+            document.getElementById('mohalla_table').innerText = mohalla;
+            document.getElementById('mohalla_para').innerText = mohalla;
+            document.getElementById('gram_table').innerText = gram;
+            document.getElementById('gram_para').innerText = gram;
+            document.getElementById('thana_val').innerText = thana;
 
-            const data = {
-                appNo: appNo,
-                certNo: certNo,
-                district: document.getElementById('district').value,
-                tehsil: document.getElementById('tehsil').value,
-                areaType: areaType,
-                mohalla: areaType === 'gramin' ? document.getElementById('mohalla').value : '',
-                gram: areaType === 'gramin' ? document.getElementById('gram').value : '',
-                thana: areaType === 'gramin' ? document.getElementById('thana').value : '',
-                applicantName: document.getElementById('applicantName').value,
-                fatherName: document.getElementById('fatherName').value,
-                motherName: document.getElementById('motherName').value,
-                issueDate: formatDate(document.getElementById('issueDate').value),
-                officerName: document.getElementById('officerName').value,
-                photo: currentPhotoBase64 || ""
-            };
+            document.getElementById('signatory_name').innerText = signatory;
+            document.getElementById('signatory_digit_1').innerText = signatory;
+            document.getElementById('signatory_digit_2').innerText = signatory;
 
-            let apps = JSON.parse(localStorage.getItem('applications') || '[]');
-            apps.push(data);
-            localStorage.setItem('applications', JSON.stringify(apps));
-
-            alert("Application Saved Successfully!");
-            showList();
-        }
-
-        function showList() {
-            document.getElementById('dashboard').classList.remove('active');
-            document.getElementById('listScreen').classList.add('active');
-            renderList();
-        }
-
-        function showDashboard() {
-            document.getElementById('listScreen').classList.remove('active');
-            document.getElementById('dashboard').classList.add('active');
-        }
-
-        function renderList() {
-            const apps = JSON.parse(localStorage.getItem('applications') || '[]');
-            const container = document.getElementById('listContainer');
-            
-            if(apps.length === 0) {
-                container.innerHTML = `<div class="empty-state card">कोई एप्लीकेशन नहीं मिला। कृपया नया फॉर्म भरें।</div>`;
-                return;
+            // 3. Handle Photo
+            const fileInput = document.getElementById('f_photo');
+            if (fileInput.files && fileInput.files[0]) {
+                const reader = new FileReader();
+                reader.onload = function(e) {
+                    document.getElementById('certPhoto').src = e.target.result;
+                };
+                reader.readAsDataURL(fileInput.files[0]);
             }
 
-            let html = `<table class="glass-table">
-                <thead>
-                    <tr>
-                        <th>Applicant Name</th>
-                        <th>Application No</th>
-                        <th>Certificate No</th>
-                        <th>District</th>
-                        <th>Actions</th>
-                    </tr>
-                </thead>
-                <tbody>`;
-            
-            apps.forEach((app, index) => {
-                html += `<tr>
-                    <td>${app.applicantName}</td>
-                    <td>${app.appNo}</td>
-                    <td>${app.certNo}</td>
-                    <td>${app.district}</td>
-                    <td>
-                        <button class="btn btn-secondary" style="margin-right: 5px; padding: 8px 12px; font-size: 14px;" onclick="printCertificate(${index})">Print</button>
-                        <button class="btn btn-danger" style="padding: 8px 12px; font-size: 14px;" onclick="deleteApp(${index})">Delete</button>
-                    </td>
-                </tr>`;
-            });
+            // 4. Update QR Code
+            updateQRCode(appNo, certNo);
 
-            html += `</tbody></table>`;
-            container.innerHTML = html;
+            // 5. Switch Views
+            document.getElementById('formSection').style.display = 'none';
+            document.getElementById('certificateSection').style.display = 'block';
+            window.scrollTo(0, 0);
         }
 
-        function deleteApp(index) {
-            if(confirm("Are you sure?")) {
-                let apps = JSON.parse(localStorage.getItem('applications') || '[]');
-                apps.splice(index, 1);
-                localStorage.setItem('applications', JSON.stringify(apps));
-                renderList();
+        // QR Code Generation Logic (From original code)
+        function updateQRCode(appNo, certNo) {
+            if (appNo && certNo) {
+                var encodedApp = btoa(appNo);
+                var encodedCert = btoa(certNo);
+                var fullParam = encodedApp + "JTJj" + encodedCert;
+                var targetURL = "https://edistrict.up.gov.in/edistrictup/certVerify.aspx?application_no=" + fullParam;
+                var qrImg = document.getElementById("qrCodeImg");
+                if (qrImg) {
+                    qrImg.src = "https://api.qrserver.com/v1/create-qr-code/?size=150x150&data=" + encodeURIComponent(targetURL);
+                }
             }
         }
 
-        function printCertificate(index) {
-            const apps = JSON.parse(localStorage.getItem('applications') || '[]');
-            const data = apps[index];
-            
-            const qrData = `https://edistrict.up.gov.in/edistrictup/certVerify.aspx?application_no=${btoa(data.appNo)}JTJj${btoa(data.certNo)}`;
-            const qrUrl = `https://api.qrserver.com/v1/create-qr-code/?size=150x150&data=${encodeURIComponent(qrData)}`;
-            
-            const photoSrc = data.photo || '';
-            const photoHtml = photoSrc ? `<img id="certPhoto" style='width: 96px; height: 96px;' src="${photoSrc}"/>` : `<div style='width:96px;height:96px;border:1px solid #000;display:inline-block;vertical-align:top;'></div>`;
-
-            // Nagar ke liye values khali rakhni hain
-            const isNagar = data.areaType === 'nagar';
-            const mohalla = isNagar ? '' : (data.mohalla || '');
-            const gram = isNagar ? '' : (data.gram || '');
-            const thana = isNagar ? '' : (data.thana || '');
-
-            // BILKUL ORIGINAL HTML STRUCTURE - Same to Same copy
-            const tableHtml = `
-<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
-<html xmlns="http://www.w3.org/1999/xhtml">
-<head>
-    <title>Print Certificate</title>
-    <style type="text/css">
-        body { font-family: Arial Unicode MS, sans-serif; font-size: 10pt; background: #fff; color: #000; margin: 10px; }
-        @media print {
-            @page { margin: 1cm; }
-            body { margin: 0; }
+        // Edit Again Logic
+        function editAgain() {
+            document.getElementById('certificateSection').style.display = 'none';
+            document.getElementById('formSection').style.display = 'block';
+            window.scrollTo(0, 0);
         }
-    </style>
-</head>
-<body onload="window.print();">
-<table class=mgn border=0 align=center width=90% cellspacing=0 cellpadding=0 style='border: 1px solid #000000; padding-left: 4px; padding-right: 4px; padding-top: 1px; padding-bottom: 1px;font-size:10pt;font-family: Arial Unicode MS'>
-    <tr><td colspan=6>&nbsp;</td></tr>
-    <tr>
-        <td colspan=6>
-            <p align=center>
-                <img src='sealofup.jpg' width='110' height='110' onerror="this.style.display='none'"/>
-        </td>
-    </tr>
-    <tr>
-        <td colspan=6>
-            <p align=center>
-                <font size=7>उत्तर प्रदॆश शासन</font>
-        </td>
-    </tr>
-    <tr><td colspan=6>&nbsp;</td></tr>
-    <tr>
-        <td colspan=6>
-            <p align=center>
-                <b>
-                    <font size=4>कार्यालय उप जिलाधिकारी द्वारा प्रदत्त सामान्य निवास प्रमाण पत्र</font>
-                </b>
-        </td>
-    </tr>
-    <tr><td colspan=6>&nbsp;</td></tr>
-    <tr>
-        <td width=17% nowrap>
-            <b>जिला </b>
-        </td>
-        <td nowrap>
-            <b><span id="district_top">${data.district}</span></b>
-        </td>
-        <td width=30% colspan=3 align=right>&nbsp;</td>
-        <td align=left width=35% nowrap>&nbsp;</td>
-    </tr>
-    <tr>
-        <td width=17% nowrap>
-            <b>तहसील </b>
-        </td>
-        <td nowrap>
-            <b><span id="tehsil_top">${data.tehsil}</span></b>
-        </td>
-        <td width=30% colspan=3 align=right>&nbsp;</td>
-        <td align=left width=35% nowrap>
-            <b>जारी दिनांक: <span id="date_top">${data.issueDate}</span></b>
-        </td>
-    </tr>
-    <tr>
-        <td width=17% valign=top nowrap>
-            <b>आवेदन क्र०</b>
-        </td>
-        <td width=30% nowrap valign=top>
-            <b>
-                <span id="app_no_val">${data.appNo}</span>
-            </b>
-        </td>
-        <td width=30% colspan=3 valign=top align=left>&nbsp;</td>
-        <td width=35% align=right>&nbsp;</td>
-    </tr>
-    <tr>
-        <td width=17% nowrap valign=top>
-            <b>प्रमाणपत्र क्र०</b>
-        </td>
-        <td width=30% nowrap valign=top>
-            <b>
-                <span id="cert_no_val">${data.certNo}</span>
-            </b>
-        </td>
-        <td width=30% colspan=3 valign=top align=left>&nbsp;</td>
-        <td width=35% align=right>&nbsp;</td>
-    </tr>
-    <tr><td colspan=6>&nbsp;</td></tr>
-    <tr>
-        <td colspan=6>
-            <table border=0 style='font-size:10pt' width=100% cellspacing=0 cellpadding=0>
-                <tr>
-                    <td width=10% align=left valign=top>&nbsp;</td>
-                    <td width=32% nowrap align=left colspan=2 valign=top>सम्बन्धित लेखपाल की जांच आख्या दिनांक <span id="date_report">${data.issueDate}</span> के आधार पर एतद् द्वारा</td>
-                    <td width=25% rowspan=6 align=left valign=top>
-                        ${photoHtml}
-                    </td>
-                </tr>
-                <tr>
-                    <td width=10% align=left valign=top>&nbsp;</td>
-                    <td width=32% height=20 align=left nowrap valign=middle>प्रमाणित किया जाता है कि</td>
-                    <td width=33% height=20 align=left valign=middle>
-                        <b>${data.applicantName}</b>
-                    </td>
-                </tr>
-                <tr>
-                    <td width=10% align=left valign=top>&nbsp;</td>
-                    <td width=32% height=20 align=left valign=middle>पुत्र/पुत्री </td>
-                    <td width=33% height=20 align=left valign=middle>
-                        <b>${data.fatherName}</b>
-                    </td>
-                </tr>
-                <tr>
-                    <td width=10% align=left valign=top>&nbsp;</td>
-                    <td width=32% height=20 align=left valign=middle>माता का नाम</td>
-                    <td width=33% height=20 align=left valign=middle>
-                        <b>${data.motherName}</b>
-                    </td>
-                </tr>
-                <tr>
-                    <td width=10% align=left valign=top>&nbsp;</td>
-                    <td width=32% height=20 align=left nowrap valign=middle>मकान नम्बर</td>
-                    <td width=33% height=20 align=left valign=middle>
-                        <b></b>
-                    </td>
-                </tr>
-                <tr>
-                    <td width=10% align=left valign=top>&nbsp;</td>
-                    <td width=32% height=20 align=left nowrap valign=middle>मोहल्ला</td>
-                    <td width=33% height=20 align=left valign=middle>
-                        <b id="mohalla_table">${mohalla}</b>
-                    </td>
-                </tr>
-                <tr>
-                    <td width=20% align=left nowrap valign=top>&nbsp;</td>
-                    <td width=32% height=20 align=left nowrap valign=top>ग्राम</td>
-                    <td width=33% height=20 align=left valign=top>
-                        <b id="gram_table">${gram}</b>
-                        &nbsp;
-                    </td>
-                </tr>
-                <tr>
-                    <td width=20% align=left nowrap valign=top>&nbsp;</td>
-                    <td width=32% height=20 align=left nowrap valign=top>थाना</td>
-                    <td width=33% height=20 align=left valign=top>
-                        <b>${thana}</b>
-                        &nbsp;
-                    </td>
-                </tr>
-                <tr>
-                    <td width=10% align=left nowrap valign=top>&nbsp;</td>
-                    <td width=32% height=20 align=left nowrap valign=top>तहसील</td>
-                    <td width=33% height=20 align=left valign=top>
-                        <b id="tehsil_table">${data.tehsil}</b>
-                    </td>
-                </tr>
-                <tr>
-                    <td width=10% align=left nowrap valign=top>&nbsp;</td>
-                    <td width=32% height=20 align=left nowrap valign=top>जिला</td>
-                    <td width=33% height=20 align=left valign=top>
-                        <b id="district_table">${data.district}</b>
-                    </td>
-                </tr>
-            </table>
-            &nbsp;
-        </td>
-    </tr>
-    <tr>
-        <td colspan=6>
-            उत्तर प्रदेश का/की निवासी है व उसका वर्तमान पता मकान नम्बर 
-            <u>
-                <b></b>
-            </u>
-            ग्राम 
-            <b>
-                <u id="gram_para">${gram} </u>
-            </b>
-            मोहल्ला 
-            <u>
-                <b id="mohalla_para">${mohalla}</b>
-            </u>
-            तहसील 
-            <u>
-                <b id="tehsil_para">${data.tehsil}</b>
-            </u>
-            ,जनपद 
-            <u>
-                <b id="district_para">${data.district}</b>
-            </u>
-            उत्तर प्रदेश है |<br>2.उपर्युक्त की पुष्टि प्रारूप - १ में आवेदन एवं  सत्यापनकर्ता द्वारा उपलब्ध कराई गई सूचना तथा इससे संतुष्ट हो जाने के उपरान्त अधोहस्ताक्षरी द्वारा उत्तर प्रदेश के इस जनपद का सामान्य निवासी होने विषयक प्रमाण पत्र निर्गत किया जा रहा है।
-        </td>
-    </tr>
-    <tr><td colspan=6>&nbsp;</td></tr>
-    <tr>
-        <td colspan=6>
-            &nbsp;<img id="qrCodeImg" style='width: 90px; height: 90px' src="${qrUrl}"/>
-        </td>
-    </tr>
-    <tr>
-        <td align=center colspan=6>
-            <table border=0 style='font-size:10pt' align=center width=100% cellspacing=0 cellpadding=0>
-                <tr>
-                    <td align=left width=17% nowrap valign=bottom height=80>
-                        <b>&nbsp;</b>
-                    </td>
-                    <td width=23% nowrap valign=bottom height=80>
-                        <b></b>
-                    </td>
-                    <td width=29% nowrap valign=bottom height=80 rowspan=4>
-                        <table border=0 width=100% cellspacing=0 cellpadding=0 id=table1>
-                            <tr>
-                                <td width=50% valign=top style='font-size: 20px; font-family: Arial'><span>${data.officerName}</span> &nbsp;</td>
-                                <td valign=top width=50% style='font-size: 8px; font-family: Arial'>Digitally Signed by <span>${data.officerName}</span>  O=Personal, C=IN,CN=<span>${data.officerName}</span>, S=Uttar Pradesh &nbsp;</td>
-                            </tr>
-                        </table>
-                        &nbsp;
-                    </td>
-                    <td width=15% nowrap colspan=2 align=center valign=bottom height=80></td>
-                </tr>
-                <tr>
-                    <td align=left width=17% nowrap>&nbsp;</td>
-                    <td width=23% style='font-size: 8px; font-family: Arial'>
-                        <b>
-                    </td>
-                    <td width=15% colspan=2 align=center nowrap>
-                        <b>सक्षम अधिकारी/उप जिलाधिकारी</b>
-                    </td>
-                </tr>
-                <tr>
-                    <td align=left width=17% nowrap>&nbsp;</td>
-                    <td width=23% style='font-size: 8px; font-family: Arial'>
-                        <b>
-                    </td>
-                    <td width=15% colspan=2 align=center nowrap>
-                        <b>डिजिटल हस्ताक्षरित</b>
-                    </td>
-                </tr>
-                <tr>
-                    <td width=17% nowrap>&nbsp;</td>
-                    <td width=23% nowrap>
-                        &nbsp;<b>&nbsp;</b>
-                    </td>
-                    <td width=9% align=center nowrap colspan=2>
-                        <b><span id="tehsil_bottom">${data.tehsil}</span>,<span id="district_bottom">${data.district}</span></b>
-                    </td>
-                </tr>
-                <tr>
-                    <td width=17% nowrap>&nbsp;</td>
-                    <td width=23% nowrap>&nbsp;</td>
-                    <td width=29% nowrap>&nbsp;</td>
-                    <td width=9% nowrap>
-                        <b>दिनॉंक:</b>
-                    </td>
-                    <td width=19% nowrap>
-                        <b id="date_bottom">${data.issueDate}</b>
-                    </td>
-                </tr>
-                <tr>
-                    <td colspan=6>&nbsp;</td>
-                </tr>
-            </table>
-        </td>
-    </tr>
-    <tr>
-        <td align=center colspan=6>
-            <font size='1pt'>
-                <b>यह प्रमाण पत्र इलेक्ट्रॉनिक डिलिवरी सिस्टम द्वारा तैयार किया गया है तथा डिजिटल सिग्नेचर से हस्ताक्षरित है एवम् आवेदक द्वारा स्वयं की लॉग इन आइडी के माध्यम से डाउनलोड किया गया है। यह प्रमाण पत्र वेबसाइट https://edistrict.up.gov.in पर इसका  पहले आवेदन क्र० फिर प्रमाणपत्र क्र० अंकित कर,सत्यापित किया जा सकता है।</b>
-            </font>
-        </td>
-    </tr>
-</table>
-</body>
-</html>`;
-            
-            const printWindow = window.open('', '_blank');
-            printWindow.document.open();
-            printWindow.document.write(tableHtml);
-            printWindow.document.close();
-        }
+
+        // Initialize QR on load (optional, for default values)
+        window.addEventListener('DOMContentLoaded', () => {
+            updateQRCode(document.getElementById('f_app_no').value, document.getElementById('f_cert_no').value);
+        });
     </script>
 </body>
 </html>
