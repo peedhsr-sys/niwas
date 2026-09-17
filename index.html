@@ -1,591 +1,698 @@
-<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
-<html xmlns="http://www.w3.org/1999/xhtml">
-    <head>
-        <title>Uttar Pradesh Domicile Certificate</title>
-        <meta charset="utf-8" />
-        <style type="text/css">
-            @media print {
-                #actbtn, .a, #form-container {
-                    display: none !important;
-                }
-                #certificate-container {
-                    display: block !important;
-                }
-            }
-            /* Form Styles for GitHub Pages */
-            #form-container {
-                font-family: Arial, sans-serif;
-                max-width: 600px;
-                margin: 20px auto;
-                padding: 20px;
-                border: 1px solid #ccc;
-                border-radius: 8px;
-                background-color: #f9f9f9;
-                box-shadow: 0 4px 8px rgba(0,0,0,0.1);
-            }
-            #form-container h2 {
-                text-align: center;
-                margin-bottom: 20px;
-                color: #333;
-            }
-            .form-group {
-                margin-bottom: 15px;
-            }
-            .form-group label {
-                display: block;
-                font-weight: bold;
-                margin-bottom: 5px;
-                font-size: 14px;
-            }
-            .form-group input[type="text"], .form-group input[type="date"] {
-                width: 100%;
-                padding: 8px;
-                box-sizing: border-box;
-                border: 1px solid #ccc;
-                border-radius: 4px;
-            }
-            .submit-btn {
-                width: 100%;
-                padding: 10px;
-                background-color: #28a745;
-                color: white;
-                border: none;
-                border-radius: 4px;
-                font-size: 16px;
-                cursor: pointer;
-                font-weight: bold;
-            }
-            .submit-btn:hover {
-                background-color: #218838;
-            }
-        </style>
-        <link rel="stylesheet" type="text/css" href="../../../../CSS/JskStyle.css" media="print"/>
-        <script language="javascript" src="../../../js/right.js" type="text/javascript"></script>
-        
-        <script language="javascript" type="text/javascript">
-            history.forward();
-            function funcOnClose() {
-                if (window.event.clientX > 100 && window.event.clientY < 0) {
-                    location.href('../../../logout.aspx');
-                }
-            }
-            function saveEditedPage() {
-                var htmlContent = "<!DOCTYPE html>\n" + document.documentElement.outerHTML;
-                var blob = new Blob([htmlContent], { type: "text/html;charset=utf-8" });
-                var link = document.createElement("a");
-                link.href = URL.createObjectURL(blob);
-                link.download = "Edited_Certificate.html";
-                document.body.appendChild(link);
-                link.click();
-                document.body.removeChild(link);
-            }
-            function updateQRCode() {
-                var appNo = document.getElementById("app_no_val") ? document.getElementById("app_no_val").innerText.trim() : "";
-                var certNo = document.getElementById("cert_no_val") ? document.getElementById("cert_no_val").innerText.trim() : "";
-                if (appNo && certNo) {
-                    var encodedApp = btoa(appNo);
-                    var encodedCert = btoa(certNo);
-                    var fullParam = encodedApp + "JTJj" + encodedCert;
-                    var targetURL = "https://edistrict.up.gov.in/edistrictup/certVerify.aspx?application_no=" + fullParam;
-                    var qrImg = document.getElementById("qrCodeImg");
-                    if (qrImg) {
-                        qrImg.src = "https://api.qrserver.com/v1/create-qr-code/?size=150x150&data=" + encodeURIComponent(targetURL);
-                    }
-                }
-            }
-            
-            // Sync Functions
-            function syncDistrict(val) {
-                ['district_top', 'district_table', 'district_para', 'district_bottom'].forEach(function(id) {
-                    var el = document.getElementById(id);
-                    if (el) el.innerText = val;
-                });
-            }
-            function syncTehsil(val) {
-                ['tehsil_top', 'tehsil_table', 'tehsil_para', 'tehsil_bottom'].forEach(function(id) {
-                    var el = document.getElementById(id);
-                    if (el) el.innerText = val;
-                });
-            }
-            function syncDate(val) {
-                ['date_top', 'date_bottom', 'date_report'].forEach(function(id) {
-                    var el = document.getElementById(id);
-                    if (el) el.innerText = val;
-                });
-            }
-            function syncMohalla(val) {
-                var el = document.getElementById('mohalla_para');
-                var el2 = document.getElementById('mohalla_table');
-                if (el) el.innerText = val;
-                if (el2) el2.innerText = val;
-            }
-            function syncGram(val) {
-                var el = document.getElementById('gram_para');
-                var el2 = document.getElementById('gram_table');
-                if (el) el.innerText = val;
-                if (el2) el2.innerText = val;
-            }
-            
-            // Photo Uploads
-            function uploadPhoto(event) {
-                var file = event.target.files[0];
-                if (file) {
-                    var reader = new FileReader();
-                    reader.onload = function(e) {
-                        document.getElementById("certPhoto").src = e.target.result;
-                    };
-                    reader.readAsDataURL(file);
-                }
-            }
-            function toggleOriginalPhoto(chk) {
-                if (chk.checked) {
-                    var appNo = document.getElementById("app_no_val") ? document.getElementById("app_no_val").innerText.trim() : "";
-                    if (appNo) {
-                        document.getElementById("certPhoto").src = "https://edistrict.up.gov.in/edistrict/showphotoCert.aspx?appid=" + appNo;
-                    }
-                }
-            }
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Application Portal with Strict Timer</title>
 
-            // FORM SUBMISSION LOGIC
-            function generateCertificate() {
-                // Populate simple text fields
-                document.getElementById('app_no_val').innerText = document.getElementById('f_app_no').value;
-                document.getElementById('cert_no_val').innerText = document.getElementById('f_cert_no').value;
-                document.getElementById('name_val').innerText = document.getElementById('f_name').value;
-                document.getElementById('father_name_val').innerText = document.getElementById('f_father_name').value;
-                document.getElementById('mother_name_val').innerText = document.getElementById('f_mother_name').value;
-                document.getElementById('thana_val').innerText = document.getElementById('f_thana').value;
-                
-                // Populate Signer Name in all 3 places
-                var signerName = document.getElementById('f_signer').value;
-                document.getElementById('signer_val1').innerText = signerName;
-                document.getElementById('signer_val2').innerText = signerName;
-                document.getElementById('signer_val3').innerText = signerName;
+<style>
+/* ================= APPLE/LINUX GLASSMORPHISM UI ================= */
+body {
+    font-family: -apple-system, BlinkMacSystemFont, "SF Pro Display", "SF Pro Text", "Helvetica Neue", Helvetica, Arial, sans-serif;
+    background: url('https://images.unsplash.com/photo-1618005182384-a83a8bd57fbe?q=80&w=2564&auto=format&fit=crop') no-repeat center center fixed;
+    background-size: cover;
+    padding: 40px;
+    text-align: center;
+    -webkit-user-select: none;
+    -moz-user-select: none;
+    -ms-user-select: none;
+    user-select: none;
+    color: #fff;
+    min-height: 100vh;
+    box-sizing: border-box;
+}
 
-                // Sync synced fields
-                syncDistrict(document.getElementById('f_district').value);
-                syncTehsil(document.getElementById('f_tehsil').value);
-                
-                // Date formatting (DD/MM/YYYY)
-                var rawDate = document.getElementById('f_date').value;
-                if(rawDate) {
-                    var dateParts = rawDate.split('-');
-                    var formattedDate = dateParts[2] + "/" + dateParts[1] + "/" + dateParts[0];
-                    syncDate(formattedDate);
-                }
+/* Glassmorphism Box */
+.box {
+    background: rgba(20, 20, 20, 0.45);
+    backdrop-filter: blur(20px);
+    -webkit-backdrop-filter: blur(20px);
+    max-width: 800px;
+    margin: auto;
+    padding: 40px 30px;
+    border-radius: 24px;
+    border: 1px solid rgba(255, 255, 255, 0.15);
+    box-shadow: 0 25px 50px rgba(0, 0, 0, 0.5), inset 0 1px 0 rgba(255, 255, 255, 0.1);
+    position: relative;
+    overflow: hidden;
+}
 
-                syncMohalla(document.getElementById('f_mohalla').value);
-                syncGram(document.getElementById('f_gram').value);
+/* User/Apple Icon Profile Image */
+.profile-img {
+    width: 80px;
+    height: 80px;
+    border-radius: 50%;
+    object-fit: cover;
+    margin-bottom: 10px;
+    box-shadow: 0 8px 20px rgba(0,0,0,0.4);
+    border: 2px solid rgba(255,255,255,0.2);
+}
 
-                // Update QR Code
-                updateQRCode();
+h2, h3 {
+    font-weight: 600;
+    letter-spacing: 0.5px;
+    margin-bottom: 15px;
+    text-shadow: 0 2px 4px rgba(0,0,0,0.3);
+}
 
-                // Hide Form, Show Certificate
-                document.getElementById('form-container').style.display = 'none';
-                document.getElementById('certificate-container').style.display = 'block';
-            }
+/* Apple Sleek Inputs */
+input, select {
+    width: 90%;
+    padding: 14px 20px;
+    font-size: 16px;
+    font-family: inherit;
+    margin-top: 20px;
+    box-sizing: border-box;
+    border-radius: 12px;
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    background: rgba(0, 0, 0, 0.3);
+    color: #fff;
+    outline: none;
+    transition: all 0.3s ease;
+    backdrop-filter: blur(10px);
+}
 
-            window.addEventListener('DOMContentLoaded', updateQRCode);
-        </script>
-        <script language="jscript" src="../../../js/Sign.js" type="text/jscript"></script>
-        <script language="javascript" src="../../../js/shortcut.js" type="text/javascript"></script>
-        <script language="javascript" type="text/javascript">
-            shortcut.add("Ctrl+A", function() {});
-            shortcut.add("Ctrl+P", function() {});
-            shortcut.add("Ctrl+S", function() {});
-            shortcut.add("Ctrl+V", function() {});
-            shortcut.add("Ctrl+X", function() {});
-            shortcut.add("Ctrl+C", function() {});
-        </script>
-        <link href="../../../../App_Themes/ThemeText/cssClassFile.css" type="text/css" rel="stylesheet"/>
-    </head>
-    <body>
+input::placeholder {
+    color: rgba(255, 255, 255, 0.6);
+}
 
-        <div id="form-container">
-            <h2>प्रमाण पत्र विवरण भरें</h2>
-            <div class="form-group">
-                <label>आवेदन क्र० (Application No):</label>
-                <input type="text" id="f_app_no" value="261900020160231" />
-            </div>
-            <div class="form-group">
-                <label>प्रमाणपत्र क्र० (Certificate No):</label>
-                <input type="text" id="f_cert_no" value="602262018342" />
-            </div>
-            <div class="form-group">
-                <label>जारी दिनांक (Date):</label>
-                <input type="date" id="f_date" value="2026-08-29" />
-            </div>
-            <div class="form-group">
-                <label>आवेदक का नाम (Name/English):</label>
-                <input type="text" id="f_name" value="गौतम गुप्ता/Gautam Gupta" />
-            </div>
-            <div class="form-group">
-                <label>पिता का नाम (Father's Name):</label>
-                <input type="text" id="f_father_name" value="श्रवण गुप्ता" />
-            </div>
-            <div class="form-group">
-                <label>माता का नाम (Mother's Name):</label>
-                <input type="text" id="f_mother_name" value="विमला देवी" />
-            </div>
-            <div class="form-group">
-                <label>मोहल्ला (Mohalla):</label>
-                <input type="text" id="f_mohalla" value="ग्राम व पोस्ट- भेलउर" />
-            </div>
-            <div class="form-group">
-                <label>ग्राम (Gram):</label>
-                <input type="text" id="f_gram" value="भेलउर" />
-            </div>
-            <div class="form-group">
-                <label>थाना (Thana):</label>
-                <input type="text" id="f_thana" value="एकौना" />
-            </div>
-            <div class="form-group">
-                <label>तहसील (Tehsil):</label>
-                <input type="text" id="f_tehsil" value="रुद्रपुर" />
-            </div>
-            <div class="form-group">
-                <label>जिला (District):</label>
-                <input type="text" id="f_district" value="देवरिया" />
-            </div>
-            <div class="form-group">
-                <label>अधिकारी का नाम (Signer Name):</label>
-                <input type="text" id="f_signer" value="Raj Kumar Gupta" />
-            </div>
-            <div class="form-group">
-                <label>आवेदक की फोटो अपलोड करें:</label>
-                <input type="file" accept="image/*" onchange="uploadPhoto(event)"/>
-            </div>
-            <button class="submit-btn" onclick="generateCertificate()">प्रमाण पत्र जनरेट करें</button>
-        </div>
+input:focus, select:focus {
+    border: 1px solid #0a84ff;
+    box-shadow: 0 0 0 4px rgba(10, 132, 255, 0.3);
+    background: rgba(0, 0, 0, 0.5);
+}
 
-        <div id="certificate-container" style="display: none;">
-            <table class=mgn border=0 align=center width=90% cellspacing=0 cellpadding=0 style='border: 1px solid #000000; padding-left: 4px; padding-right: 4px; padding-top: 1px; padding-bottom: 1px;font-size:10pt;font-family: Arial Unicode MS'>
-                <tr>
-                    <td colspan=6>&nbsp;</td>
-                </tr>
-                <tr>
-                    <td colspan=6>
-                        <p align=center>
-                            <img src='sealofup.jpg' width='110' height='110'/>
-                    </td>
-                </tr>
-                <tr>
-                    <td colspan=6>
-                        <p align=center>
-                            <font size=7>उत्तर प्रदॆश शासन</font>
-                    </td>
-                </tr>
-                <tr>
-                    <td colspan=6>&nbsp;</td>
-                </tr>
-                <tr>
-                    <td colspan=6>
-                        <p align=center>
-                            <b>
-                                <font size=4>कार्यालय उप जिलाधिकारी द्वारा प्रदत्त सामान्य निवास प्रमाण पत्र</font>
-                            </b>
-                    </td>
-                </tr>
-                <tr>
-                    <td colspan=6>&nbsp;</td>
-                </tr>
-                <tr>
-                    <td width=17% nowrap>
-                        <b>जिला </b>
-                    </td>
-                    <td nowrap>
-                        <b><span contenteditable="true" id="district_top" oninput="syncDistrict(this.innerText)">देवरिया</span></b>
-                    </td>
-                    <td width=30% colspan=3 align=right>&nbsp;</td>
-                    <td align=left width=35% nowrap>&nbsp;</td>
-                </tr>
-                <tr>
-                    <td width=17% nowrap>
-                        <b>तहसील </b>
-                    </td>
-                    <td nowrap>
-                        <b><span contenteditable="true" id="tehsil_top" oninput="syncTehsil(this.innerText)">रुद्रपुर</span></b>
-                    </td>
-                    <td width=30% colspan=3 align=right>&nbsp;</td>
-                    <td align=left width=35% nowrap>
-                        <b>जारी दिनांक: <span contenteditable="true" id="date_top" oninput="syncDate(this.innerText)">29/08/2026</span></b>
-                    </td>
-                </tr>
-                <tr>
-                    <td width=17% valign=top nowrap>
-                        <b>आवेदन क्र०</b>
-                    </td>
-                    <td width=30% nowrap valign=top>
-                        <b>
-                            <span id="app_no_val" contenteditable="true" oninput="updateQRCode()">261900020160231</span>
-                        </b>
-                    </td>
-                    <td width=30% colspan=3 valign=top align=left>&nbsp;</td>
-                    <td width=35% align=right>&nbsp;</td>
-                </tr>
-                <tr>
-                    <td width=17% nowrap valign=top>
-                        <b>प्रमाणपत्र क्र०</b>
-                    </td>
-                    <td width=30% nowrap valign=top>
-                        <b>
-                            <span id="cert_no_val" contenteditable="true" oninput="updateQRCode()">602262018342</span>
-                        </b>
-                    </td>
-                    <td width=30% colspan=3 valign=top align=left>&nbsp;</td>
-                    <td width=35% align=right>&nbsp;</td>
-                </tr>
-                <tr>
-                    <td colspan=6>&nbsp;</td>
-                </tr>
-                <tr>
-                    <td colspan=6>
-                        <table border=0 style='font-size:10pt' width=100% cellspacing=0 cellpadding=0>
-                            <tr>
-                                <td width=10% align=left valign=top>&nbsp;</td>
-                                <td width=32% nowrap align=left colspan=2 valign=top>सम्बन्धित लेखपाल की जांच आख्या दिनांक <span id="date_report">29/08/2026</span> के आधार पर एतद् द्वारा</td>
-                                <td width=25% rowspan=6 align=left valign=top>
-                                    <img id="certPhoto" style='width: 96px; height: 96px; cursor: pointer;' src="../../../showphotoCert.aspx?appid=261900020160231&ecfR$gL=" onclick="document.getElementById('fileInputPhoto').click();" title="फोटो बदलने के लिए क्लिक करें"/>
-                                    <input type="file" id="fileInputPhoto" accept="image/*" style="display: none;" onchange="uploadPhoto(event)"/>
-                                </td>
-                            </tr>
-                            <tr>
-                                <td width=10% align=left valign=top>&nbsp;</td>
-                                <td width=32% height=20 align=left nowrap valign=middle>प्रमाणित किया जाता है कि</td>
-                                <td width=33% height=20 align=left valign=middle>
-                                    <b contenteditable="true" id="name_val">गौतम गुप्ता/Gautam Gupta</b>
-                                </td>
-                            </tr>
-                            <tr>
-                                <td width=10% align=left valign=top>&nbsp;</td>
-                                <td width=32% height=20 align=left valign=middle>पुत्र/पुत्री </td>
-                                <td width=33% height=20 align=left valign=middle>
-                                    <b contenteditable="true" id="father_name_val">श्रवण गुप्ता</b>
-                                </td>
-                            </tr>
-                            <tr>
-                                <td width=10% align=left valign=top>&nbsp;</td>
-                                <td width=32% height=20 align=left valign=middle>माता का नाम</td>
-                                <td width=33% height=20 align=left valign=middle>
-                                    <b contenteditable="true" id="mother_name_val">विमला देवी</b>
-                                </td>
-                            </tr>
-                            <tr>
-                                <td width=10% align=left valign=top>&nbsp;</td>
-                                <td width=32% height=20 align=left nowrap valign=middle>मकान नम्बर</td>
-                                <td width=33% height=20 align=left valign=middle>
-                                    <b></b>
-                                </td>
-                            </tr>
-                            <tr>
-                                <td width=10% align=left valign=top>&nbsp;</td>
-                                <td width=32% height=20 align=left nowrap valign=middle>मोहल्ला</td>
-                                <td width=33% height=20 align=left valign=middle>
-                                    <b contenteditable="true" id="mohalla_table" oninput="syncMohalla(this.innerText)">ग्राम व पोस्ट- भेलउर</b>
-                                </td>
-                            </tr>
-                            <tr>
-                                <td width=20% align=left nowrap valign=top>&nbsp;</td>
-                                <td width=32% height=20 align=left nowrap valign=top>ग्राम</td>
-                                <td width=33% height=20 align=left valign=top>
-                                    <b contenteditable="true" id="gram_table" oninput="syncGram(this.innerText)">भेलउर</b>
-                                    &nbsp;
-                                </td>
-                            </tr>
-                            <tr>
-                                <td width=20% align=left nowrap valign=top>&nbsp;</td>
-                                <td width=32% height=20 align=left nowrap valign=top>थाना</td>
-                                <td width=33% height=20 align=left valign=top>
-                                    <b contenteditable="true" id="thana_val">एकौना</b>
-                                    &nbsp;
-                                </td>
-                            </tr>
-                            <tr>
-                                <td width=10% align=left nowrap valign=top>&nbsp;</td>
-                                <td width=32% height=20 align=left nowrap valign=top>तहसील</td>
-                                <td width=33% height=20 align=left valign=top>
-                                    <b contenteditable="true" id="tehsil_table">रुद्रपुर</b>
-                                </td>
-                            </tr>
-                            <tr>
-                                <td width=10% align=left nowrap valign=top>&nbsp;</td>
-                                <td width=32% height=20 align=left nowrap valign=top>जिला</td>
-                                <td width=33% height=20 align=left valign=top>
-                                    <b contenteditable="true" id="district_table">देवरिया</b>
-                                </td>
-                            </tr>
-                        </table>
-                        &nbsp;
-                    </td>
-                </tr>
-                <tr>
-                    <td colspan=6>
-                        उत्तर प्रदेश का/की निवासी है व उसका वर्तमान पता मकान नम्बर 
-                        <u>
-                            <b></b>
-                        </u>
-                        ग्राम 
-                        <b>
-                            <u contenteditable="true" id="gram_para">भेलउर </u>
-                        </b>
-                        मोहल्ला 
-                        <u>
-                            <b contenteditable="true" id="mohalla_para">ग्राम व पोस्ट- भेलउर</b>
-                        </u>
-                        तहसील 
-                        <u>
-                            <b contenteditable="true" id="tehsil_para">रुद्रपुर</b>
-                        </u>
-                        ,जनपद 
-                        <u>
-                            <b contenteditable="true" id="district_para">देवरिया</b>
-                        </u>
-                        उत्तर प्रदेश है |<br>2.उपर्युक्त की पुष्टि प्रारूप - १ में आवेदन एवं  सत्यापनकर्ता द्वारा उपलब्ध कराई गई सूचना तथा इससे संतुष्ट हो जाने के उपरान्त अधोहस्ताक्षरी द्वारा उत्तर प्रदेश के इस जनपद का सामान्य निवासी होने विषयक प्रमाण पत्र निर्गत किया जा रहा है।
-                    </td>
-                </tr>
-                <tr>
-                    <td colspan=6>&nbsp;</td>
-                </tr>
-                <tr>
-                    <td colspan=6>
-                        &nbsp;<img id="qrCodeImg" style='width: 90px; height: 90px' src="https://api.qrserver.com/v1/create-qr-code/?size=150x150&data=https%3A%2F%2Fedistrict.up.gov.in%2Fedistrictup%2FcertVerify.aspx%3Fapplication_no%3DMjYxOTAwMDIwMTYwMjMxJTJjNjAyMjYyMDE0MzAy"/>
-                    </td>
-                </tr>
-                <tr>
-                    <td align=center colspan=6>
-                        <table border=0 style='font-size:10pt' align=center width=100% cellspacing=0 cellpadding=0>
-                            <tr>
-                                <td align=left width=17% nowrap valign=bottom height=80>
-                                    <b>&nbsp;</b>
-                                </td>
-                                <td width=23% nowrap valign=bottom height=80>
-                                    <b></b>
-                                </td>
-                                <td width=29% nowrap valign=bottom height=80 rowspan=4>
-                                    <table border=0 width=100% cellspacing=0 cellpadding=0 id=table1>
-                                        <tr>
-                                            <td width=50% valign=top style='font-size: 20px; font-family: Arial'><span contenteditable="true" id="signer_val1">Raj Kumar Gupta</span> &nbsp;</td>
-                                            <td valign=top width=50% style='font-size: 8px; font-family: Arial'>Digitally Signed by <span contenteditable="true" id="signer_val2">Raj Kumar Gupta</span>  O=Personal, C=IN,CN=<span contenteditable="true" id="signer_val3">Raj Kumar Gupta</span>, S=Uttar Pradesh &nbsp;</td>
-                                        </tr>
-                                    </table>
-                                    &nbsp;
-                                </td>
-                                <td width=15% nowrap colspan=2 align=center valign=bottom height=80 background=../../../Sign/.jpg></td>
-                            </tr>
-                            <tr>
-                                <td align=left width=17% nowrap>&nbsp;</td>
-                                <td width=23% style='font-size: 8px; font-family: Arial'>
-                                    <b>
-                                </td>
-                                <td width=15% colspan=2 align=center nowrap>
-                                    <b>सक्षम अधिकारी/उप जिलाधिकारी</b>
-                                </td>
-                            </tr>
-                            <tr>
-                                <td align=left width=17% nowrap>&nbsp;</td>
-                                <td width=23% style='font-size: 8px; font-family: Arial'>
-                                    <b>
-                                </td>
-                                <td width=15% colspan=2 align=center nowrap>
-                                    <b>डिजिटल हस्ताक्षरित</b>
-                                </td>
-                            </tr>
-                            <tr>
-                                <td width=17% nowrap>&nbsp;</td>
-                                <td width=23% nowrap>
-                                    &nbsp;<b>&nbsp;</b>
-                                </td>
-                                <td width=9% align=center nowrap colspan=2>
-                                    <b><span contenteditable="true" id="tehsil_bottom">रुद्रपुर</span>,<span contenteditable="true" id="district_bottom">देवरिया</span></b>
-                                </td>
-                            </tr>
-                            <tr>
-                                <td width=17% nowrap>&nbsp;</td>
-                                <td width=23% nowrap>&nbsp;</td>
-                                <td width=29% nowrap>&nbsp;</td>
-                                <td width=9% nowrap>
-                                    <b>दिनॉंक:</b>
-                                </td>
-                                <td width=19% nowrap>
-                                    <b contenteditable="true" id="date_bottom">29/08/2026</b>
-                                </td>
-                            </tr>
-                            <tr>
-                                <td colspan=6>&nbsp;</td>
-                            </tr>
-                        </table>
-                    </td>
-                </tr>
-                <tr>
-                    <td align=center colspan=6>
-                        <font size='1pt'>
-                            <b>यह प्रमाण पत्र इलेक्ट्रॉनिक डिलिवरी सिस्टम द्वारा तैयार किया गया है तथा डिजिटल सिग्नेचर से हस्ताक्षरित है एवम् आवेदक द्वारा स्वयं की लॉग इन आइडी के माध्यम से डाउनलोड किया गया है। यह प्रमाण पत्र वेबसाइट https://edistrict.up.gov.in पर इसका  पहले आवेदन क्र० फिर प्रमाणपत्र क्र० अंकित कर,सत्यापित किया जा सकता है।</b>
-                        </font>
-                    </td>
-                </tr>
-            </table>
+select option {
+    background: #1c1c1e;
+    color: #fff;
+}
 
-            <P align="justify">
-                <IMG style="Z-INDEX: -1; POSITION: absolute; FLOAT: left; TOP: 220; LEFT: 250" border=0 src="GOVERNMENT_MONOGRAM.gif" width="400" height="400">
-            </P>
-            
-            <div class="a">
-                <table id="actbtn" align="center" style="width: 85%">
-                    <tr>
-                        <td align="center" colspan="2">
-                            <input type="button" name="btnPrint" value="Print" onclick="window.print();" id="btnPrint" style="border-width:1px;border-style:solid; cursor:pointer; padding: 2px 10px;"/>
-                            &nbsp;
-                            <input type="button" name="btnSave" value="Save" onclick="saveEditedPage();" id="btnSave" style="border-width:1px;border-style:solid; cursor:pointer; padding: 2px 10px;"/>
-                            &nbsp;
-                            <input id="btnClose" onclick="javascript:self.close()" type="button" value="Close" style="border-width:1px;border-style:solid; cursor:pointer; padding: 2px 10px;"/>
-                            &nbsp;
-                            <label style="cursor:pointer; font-size:10pt;"><input type="checkbox" id="chkGetOriginalPhoto" onchange="toggleOriginalPhoto(this)"/> Get Original Photo</label>
-                        </td>
-                    </tr>
-                    <tr>
-                        <td align="center" colspan="2">&nbsp;</td>
-                    </tr>
-                </table>
-            </div>
-            
-            <form name="form1" method="post" action="./printDomCert.aspx?application_no=MjYxOTAwMDIwMTYwMjMx" id="form1" onsubmit="return false;">
-                <div>
-                    <input type="hidden" name="__VIEWSTATE" id="__VIEWSTATE" value="/wEPDwUKLTk4NDgwNDM2NQ8WEB4Cb24FAm9uHg9hYXBwbGljYXRpb25fbm8FDzI2MTkwMDAyMDE6MDIzMR4CY2MFDDYwMjI2MjAxODM0Mh4GU2hvd0DSBQRTSE9XHgdzdHJzaWduBVXgpJfgpYzgpKTgpK4g4KSX4KWB4KSq4KWN4KSk4KS+L0dhdXRhbSBHdXB0YeCktuCljeCksOCkteCkoyDgpJfgpYHgpKrgpY3gpKTgpL4wNjAwMDAyHgdjc2Njb2RlBQoyMDAwNDEyNTM5HgxBcHByb3ZhbENvZGUFCDA2MDEwNTc2HgZ1cGRhdGUFGzE2JTJmMDklMmYyMDI2KzExJTNhMzAlM2E0NWRk4VBY9gmi7gQxXO+VEzTnxPlW/kd0egXVCQuzM/K0n6Q="/>
-                </div>
-                <script type="text/javascript">
-                    //<![CDATA[
-                    var theForm = document.forms['form1'];
-                    if (!theForm) {
-                        theForm = document.form1;
-                    }
-                    function __doPostBack(eventTarget, eventArgument) {
-                        if (!theForm.onsubmit || (theForm.onsubmit() != false)) {
-                            theForm.__EVENTTARGET.value = eventTarget;
-                            theForm.__EVENTARGUMENT.value = eventArgument;
-                            theForm.submit();
-                        }
-                    }
-                    //]]>
-                </script>
-                <script src="/citizenservices/WebResource.axd?d=TbU-ZugvqjemS3-SppHOcNWOnls1C7IlVRxCSLQfl-M9fE9C531PxLPI_ul7XgOQoUoE384KaGXv9cO4B4wgizkHDlLQnv1kE1yvJeLXUyw1&amp;t=638628405619783110" type="text/javascript"></script>
-                <div>
-                    <input type="hidden" name="__VIEWSTATEGENERATOR" id="__VIEWSTATEGENERATOR" value="46DCFAD3"/>
-                    <input type="hidden" name="__SCROLLPOSITIONX" id="__SCROLLPOSITIONX" value="0"/>
-                    <input type="hidden" name="__SCROLLPOSITIONY" id="__SCROLLPOSITIONY" value="0"/>
-                    <input type="hidden" name="__EVENTTARGET" id="__EVENTTARGET" value=""/>
-                    <input type="hidden" name="__EVENTARGUMENT" id="__EVENTARGUMENT" value=""/>
-                    <input type="hidden" name="__EVENTVALIDATION" id="__EVENTVALIDATION" value="/wEdAAKG1mM3SxMerq93GlSFaWKdi7kLJnpB8B/U17unWNWfoX8lTAeolalEV4s9Sm65JXxWfOceOByfpNc3fJZKGdF6"/>
-                </div>
-                <script type="text/javascript">
-                    //<![CDATA[
-                    theForm.oldSubmit = theForm.submit;
-                    theForm.submit = WebForm_SaveScrollPositionSubmit;
+/* MacOS Style Buttons */
+button {
+    padding: 14px 30px;
+    font-size: 16px;
+    font-family: inherit;
+    font-weight: 600;
+    margin-top: 25px;
+    cursor: pointer;
+    background: linear-gradient(180deg, #0a84ff 0%, #0066cc 100%);
+    color: white;
+    border: 1px solid rgba(0,0,0,0.2);
+    border-radius: 12px;
+    box-shadow: 0 4px 15px rgba(10, 132, 255, 0.4);
+    transition: all 0.2s ease-in-out;
+}
+
+button:hover:not(:disabled) {
+    transform: translateY(-2px);
+    box-shadow: 0 6px 20px rgba(10, 132, 255, 0.6);
+}
+
+button:active:not(:disabled) {
+    transform: translateY(1px);
+}
+
+button:disabled {
+    background: rgba(255, 255, 255, 0.1);
+    color: rgba(255, 255, 255, 0.3);
+    box-shadow: none;
+    border: 1px solid rgba(255, 255, 255, 0.05);
+    cursor: not-allowed;
+}
+
+/* Logout Red Apple Button */
+.logout-btn {
+    background: linear-gradient(180deg, #ff453a 0%, #d70015 100%);
+    position: absolute;
+    top: 20px;
+    right: 20px;
+    margin: 0;
+    padding: 8px 18px;
+    font-size: 13px;
+    border-radius: 8px;
+    box-shadow: 0 4px 10px rgba(255, 69, 58, 0.3);
+}
+.logout-btn:hover {
+    box-shadow: 0 6px 15px rgba(255, 69, 58, 0.5);
+}
+
+/* MacOS Control Center Style Timer */
+.session-timer {
+    position: absolute;
+    top: 20px;
+    left: 20px;
+    font-size: 13px;
+    font-weight: bold;
+    color: #ff453a;
+    background: rgba(255, 69, 58, 0.15);
+    padding: 8px 15px;
+    border-radius: 8px;
+    border: 1px solid rgba(255, 69, 58, 0.3);
+    backdrop-filter: blur(10px);
+}
+
+/* Segmented Control Tabs (MacOS Style) */
+.nav-tabs {
+    display: flex;
+    justify-content: center;
+    margin-bottom: 25px;
+    gap: 8px;
+    flex-wrap: wrap;
+    background: rgba(0, 0, 0, 0.3);
+    padding: 6px;
+    border-radius: 14px;
+    border: 1px solid rgba(255,255,255,0.1);
+}
+.nav-tabs span {
+    padding: 10px 20px;
+    background: transparent;
+    border-radius: 10px;
+    cursor: pointer;
+    font-size: 14px;
+    font-weight: 600;
+    color: rgba(255,255,255,0.7);
+    transition: all 0.3s ease;
+}
+.nav-tabs span:hover {
+    color: #fff;
+    background: rgba(255,255,255,0.1);
+}
+.nav-tabs span.active {
+    background: rgba(255,255,255,0.15);
+    color: #fff;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.2);
+    border: 1px solid rgba(255,255,255,0.2);
+}
+
+/* Glassmorphism List for Admin */
+.list-container {
+    text-align: left;
+    max-width: 450px;
+    margin: 25px auto;
+    background: rgba(0, 0, 0, 0.2);
+    padding: 20px;
+    border-radius: 16px;
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    backdrop-filter: blur(10px);
+}
+.list-item {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 10px 0;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+    font-size: 15px;
+}
+.list-item:last-child {
+    border-bottom: none;
+}
+.delete-btn {
+    background: rgba(255, 69, 58, 0.2);
+    color: #ff453a;
+    border: 1px solid rgba(255, 69, 58, 0.3);
+    padding: 5px 12px;
+    margin: 0;
+    font-size: 12px;
+    border-radius: 6px;
+    box-shadow: none;
+}
+.delete-btn:hover {
+    background: rgba(255, 69, 58, 0.4);
+    box-shadow: 0 2px 8px rgba(255, 69, 58, 0.3);
+}
+
+/* Context Menu */
+#custom-menu {
+    display: none;
+    position: absolute;
+    background: rgba(30, 30, 30, 0.9);
+    color: #fff;
+    padding: 12px 20px;
+    border-radius: 8px;
+    font-size: 14px;
+    box-shadow: 0px 8px 24px rgba(0,0,0,0.6);
+    border: 1px solid rgba(255,255,255,0.1);
+    z-index: 999999;
+    pointer-events: none;
+    backdrop-filter: blur(10px);
+}
+
+/* ================= NEW MAC STYLE FULL HD ADMIN HEADER ================= */
+.mac-admin-header {
+    background: linear-gradient(135deg, rgba(255, 255, 255, 0.15), rgba(255, 255, 255, 0.05));
+    border: 1px solid rgba(255, 255, 255, 0.25);
+    border-radius: 16px;
+    padding: 20px;
+    margin-top: 40px;
+    margin-bottom: 25px;
+    backdrop-filter: blur(25px);
+    -webkit-backdrop-filter: blur(25px);
+    box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.37);
+    text-align: center;
+}
+.mac-admin-header h2 {
+    font-size: 28px;
+    font-weight: 700;
+    background: linear-gradient(90deg, #00f2fe 0%, #4facfe 100%);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    margin: 10px 0;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+}
+.mac-badge {
+    display: inline-block;
+    background: #0066cc;
+    color: #fff;
+    font-size: 11px;
+    font-weight: bold;
+    padding: 4px 12px;
+    border-radius: 20px;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    box-shadow: 0 0 12px rgba(0, 102, 204, 0.6);
+}
+</style>
+</head>
+
+<body>
+
+<div id="custom-menu">सुरक्षा के कारण यह विकल्प बंद है।</div>
+
+<div id="authPanel" class="box">
     
-                    theForm.oldOnSubmit = theForm.onsubmit;
-                    theForm.onsubmit = WebForm_SaveScrollPositionOnSubmit;
-                    //]]>
-                </script>
-            </form>
-        </div>
-    </body>
+    <div class="nav-tabs">
+        <span id="tabLogin" class="active" onclick="switchAuthTab('login')">Login</span>
+        <span id="tabRegister" onclick="switchAuthTab('register')">New Registration</span>
+        <span id="tabAdmin" onclick="switchAuthTab('admin')">Admin Login</span>
+        <span id="tabChangePass" onclick="switchAuthTab('changePass')" style="color: #ffd60a;">Change Password</span>
+    </div>
+
+    <img src="https://cdn-icons-png.flaticon.com/512/3135/3135715.png" alt="Profile" class="profile-img">
+
+    <h3 id="authTitle">User Login</h3>
+    
+    <input type="text" id="authUsername" placeholder="Enter Username (Mobile No or 'admin')">
+    <input type="password" id="authPassword" placeholder="Enter Password">
+    <input type="password" id="authConfirmPassword" placeholder="Confirm Password" style="display: none;">
+    
+    <br>
+    <button onclick="handleAuthSubmit()">Submit</button>
+</div>
+
+<div id="adminPanel" class="box" style="display: none;">
+    <div class="session-timer" id="adminTimer">Session: 05:00</div>
+    <button class="logout-btn" onclick="logout()">Logout</button>
+
+    <div class="mac-admin-header">
+        <span class="mac-badge">macOS System Control</span>
+        <h2>Admin Dashboard Control Center</h2>
+    </div>
+    
+    <p style="color: rgba(255,255,255,0.7); font-size: 14px;">यहाँ से अधिकतम 20 मोबाइल नंबर जोड़ें, केवल वही लोग नया रजिस्ट्रेशन कर पाएंगे।</p>
+    
+    <input type="text" id="newAllowedMobile" placeholder="Enter Mobile Number to Authorize">
+    <br>
+    <button onclick="addMobileToWhitelist()">Add Mobile Number</button>
+    
+    <div class="list-container">
+        <strong style="color: #0a84ff;">Authorized Mobile Numbers (<span id="currentCount">0</span>/20):</strong>
+        <div id="whitelistDisplay" style="margin-top: 15px;"></div>
+    </div>
+</div>
+
+<div id="mainPortal" class="box" style="display: none;">
+    <div class="session-timer" id="portalTimer">Session: 05:00</div>
+    <button class="logout-btn" onclick="logout()">Logout</button>
+
+    <img src="https://cdn-icons-png.flaticon.com/512/2912/2912301.png" alt="Portal" class="profile-img" style="margin-top: 30px;">
+    <h2>Direct Original Certificate Print</h2>
+    <p style="color: rgba(255,255,255,0.7); font-size: 14px; margin-bottom: 25px;">(For All Districts of Uttar Pradesh)</p>
+
+    <select id="portalType" onchange="validateForm()">
+        <option value="">-- पोर्टल चुनें / Select Portal --</option>
+        <option value="edistrict">e-District Portal</option>
+        <option value="ecitizen">e-Citizen (e-Sathi) Portal</option>
+    </select>
+    <br>
+
+    <select id="certType" onchange="validateForm()">
+        <option value="">-- प्रमाणपत्र चुनें / Select Certificate --</option>
+        <option value="aay">आय प्रमाणपत्र (Income Certificate)</option>
+        <option value="jati">जाति प्रमाणपत्र (Caste Certificate)</option>
+        <option value="niwas">निवास प्रमाणपत्र (Domicile Certificate)</option>
+    </select>
+    <br>
+
+    <input type="text" id="appno" placeholder="Enter Application Number" oninput="validateForm()">
+    <br>
+    
+    <button id="confirmBtn" onclick="openLink()" disabled>Confirm & Open Link</button>
+</div>
+
+<script>
+var activeTab = 'login';
+var countdownInterval; 
+
+// ================= टाइमर लॉजिक =================
+function startSessionTimer() {
+    clearInterval(countdownInterval); 
+    
+    var sessionEndTime = Date.now() + 300000; 
+
+    document.getElementById('adminTimer').innerText = "Session: 05:00";
+    document.getElementById('portalTimer').innerText = "Session: 05:00";
+
+    countdownInterval = setInterval(function() {
+        var timeLeft = Math.floor((sessionEndTime - Date.now()) / 1000);
+
+        if (timeLeft <= 0) {
+            clearInterval(countdownInterval);
+            logout();
+            alert("Session Expired! 5 मिनट पूरे हो गए हैं। आपको ऑटोमैटिक लॉगआउट कर दिया गया है।");
+            return;
+        }
+
+        var min = Math.floor(timeLeft / 60);
+        var sec = timeLeft % 60;
+        var formattedTime = (min < 10 ? "0" + min : min) + ":" + (sec < 10 ? "0" + sec : sec);
+        
+        document.getElementById('adminTimer').innerText = "Session: " + formattedTime;
+        document.getElementById('portalTimer').innerText = "Session: " + formattedTime;
+    }, 1000); 
+}
+
+// ================= TABS SWITCHING LOGIC =================
+function switchAuthTab(tab) {
+    activeTab = tab;
+    document.getElementById('tabLogin').className = (tab === 'login') ? 'active' : '';
+    document.getElementById('tabRegister').className = (tab === 'register') ? 'active' : '';
+    document.getElementById('tabAdmin').className = (tab === 'admin') ? 'active' : '';
+    
+    if(tab === 'changePass') {
+        document.getElementById('tabChangePass').classList.add('active');
+        document.getElementById('tabChangePass').style.border = '1px solid #ffd60a';
+    } else {
+        document.getElementById('tabChangePass').classList.remove('active');
+        document.getElementById('tabChangePass').style.border = '1px solid transparent';
+    }
+    
+    document.getElementById('authUsername').value = '';
+    document.getElementById('authPassword').value = '';
+    document.getElementById('authConfirmPassword').value = '';
+
+    // कंडीशन के हिसाब से कन्फर्म पासवर्ड का बॉक्स दिखाना या छुपाना
+    if (tab === 'register' || tab === 'changePass') {
+        document.getElementById('authConfirmPassword').style.display = 'inline-block';
+    } else {
+        document.getElementById('authConfirmPassword').style.display = 'none';
+    }
+    
+    // प्लेसहोल्डर और टाइटल्स सेट करना
+    if (tab === 'login') {
+        document.getElementById('authTitle').innerText = 'User Login';
+        document.getElementById('authUsername').placeholder = 'Enter Username (Mobile No or admin)';
+        document.getElementById('authPassword').placeholder = 'Enter Password';
+    } else if (tab === 'register') {
+        document.getElementById('authTitle').innerText = 'New Registration';
+        document.getElementById('authUsername').placeholder = 'Enter Username (Mobile No)';
+        document.getElementById('authPassword').placeholder = 'Enter Password';
+        document.getElementById('authConfirmPassword').placeholder = 'Confirm Password';
+    } else if (tab === 'admin') {
+        document.getElementById('authTitle').innerText = 'Admin Login';
+        document.getElementById('authUsername').placeholder = "Enter 'admin'";
+        document.getElementById('authPassword').placeholder = 'Enter Admin Password';
+    } else if (tab === 'changePass') {
+        document.getElementById('authTitle').innerText = 'Change Your Password';
+        document.getElementById('authUsername').placeholder = 'Enter Username (Mobile No or "admin")';
+        document.getElementById('authPassword').placeholder = 'Enter OLD Password';
+        document.getElementById('authConfirmPassword').placeholder = 'Enter NEW Password';
+    }
+}
+
+// ================= LOGIN, REGISTRATION & PASSWORD LOGIC =================
+function handleAuthSubmit() {
+    var mobileOrUser = document.getElementById('authUsername').value.trim();
+    var pass = document.getElementById('authPassword').value.trim();
+    var confirmPass = document.getElementById('authConfirmPassword').value.trim();
+    
+    if (mobileOrUser === "" || pass === "") {
+        alert("कृपया सभी फ़ील्ड भरें!");
+        return;
+    }
+
+    var whitelist = JSON.parse(localStorage.getItem('allowedMobiles')) || [];
+    var users = JSON.parse(localStorage.getItem('registeredUsers')) || [];
+    
+    // एडमिन का डिफ़ॉल्ट पासवर्ड आपकी पसंद के अनुसार Abcd@6769 सेट किया गया है
+    var currentAdminPass = localStorage.getItem('adminPassword') || 'Abcd@6769';
+
+    // 1. एडमिन लॉगिन टैब
+    if (activeTab === 'admin') {
+        if (mobileOrUser === 'admin' && pass === currentAdminPass) {
+            document.getElementById('authPanel').style.display = 'none';
+            document.getElementById('adminPanel').style.display = 'block';
+            renderWhitelist();
+            startSessionTimer();
+        } else {
+            alert("गलत एडमिन यूजरनेम या पासवर्ड!");
+        }
+    } 
+    // 2. नया रजिस्ट्रेशन टैब (दो बार पासवर्ड चेक करने के साथ)
+    else if (activeTab === 'register') {
+        if (confirmPass === "") {
+            alert("कृपया कन्फर्म पासवर्ड भी भरें!");
+            return;
+        }
+        if (pass !== confirmPass) {
+            alert("दोनों पासवर्ड आपस में मेल नहीं खा रहे हैं! कृपया सही डालें।");
+            return;
+        }
+        if (!whitelist.includes(mobileOrUser)) {
+            alert("यह मोबाइल नंबर एडमिन द्वारा लिस्ट में नहीं जोड़ा गया है। आप रजिस्ट्रेशन नहीं कर सकते!");
+            return;
+        }
+        var userExists = users.some(function(u) { return u.username === mobileOrUser; });
+        if (userExists) {
+            alert("यह मोबाइल नंबर पहले से रजिस्टर्ड है! कृपया सीधे लॉगिन करें।");
+            return;
+        }
+        users.push({ username: mobileOrUser, password: pass });
+        localStorage.setItem('registeredUsers', JSON.stringify(users));
+        alert("रजिस्ट्रेशन सफल रहा! अब लॉगिन करें।");
+        switchAuthTab('login');
+    } 
+    // 3. लॉगिन टैब
+    else if (activeTab === 'login') {
+        if (mobileOrUser === 'admin' && pass === currentAdminPass) {
+            document.getElementById('authPanel').style.display = 'none';
+            document.getElementById('mainPortal').style.display = 'block';
+            document.getElementById('appno').value = ''; 
+            validateForm();
+            startSessionTimer();
+            return;
+        }
+
+        var foundUser = users.find(function(u) { return u.username === mobileOrUser && u.password === pass; });
+        
+        if (foundUser) {
+            if (!whitelist.includes(mobileOrUser)) {
+                alert("एडमिन ने आपका नंबर लिस्ट से हटा दिया है! अब आप लॉगिन नहीं कर सकते।");
+                return;
+            }
+            
+            document.getElementById('authPanel').style.display = 'none';
+            document.getElementById('mainPortal').style.display = 'block';
+            document.getElementById('appno').value = ''; 
+            validateForm();
+            startSessionTimer();
+        } else {
+            alert("गलत यूजरनेम (मोबाइल नंबर) या पासवर्ड!");
+        }
+    }
+    // 4. पासवर्ड बदलने का टैब (दो बार पासवर्ड वेरिफिकेशन)
+    else if (activeTab === 'changePass') {
+        if (confirmPass === "") {
+            alert("कृपया नया पासवर्ड बॉक्स भी भरें!");
+            return;
+        }
+
+        if (mobileOrUser === 'admin') {
+            if (pass === currentAdminPass) {
+                localStorage.setItem('adminPassword', confirmPass);
+                alert("एडमिन पासवर्ड सफलतापूर्वक बदल दिया गया है! अब नए पासवर्ड से लॉगिन करें।");
+                switchAuthTab('admin'); 
+            } else {
+                alert("एडमिन का पुराना पासवर्ड गलत है!");
+            }
+        } 
+        else {
+            var userIndex = users.findIndex(function(u) { return u.username === mobileOrUser; });
+            if (userIndex !== -1) {
+                if (users[userIndex].password === pass) {
+                    users[userIndex].password = confirmPass;
+                    localStorage.setItem('registeredUsers', JSON.stringify(users));
+                    alert("आपका पासवर्ड सफलतापूर्वक बदल दिया गया है! अब नए पासवर्ड से लॉगिन करें।");
+                    switchAuthTab('login'); 
+                } else {
+                    alert("पुराना पासवर्ड गलत है!");
+                }
+            } else {
+                alert("यह यूजरनेम (मोबाइल नंबर) रजिस्टर्ड नहीं है!");
+            }
+        }
+    }
+}
+
+// ================= ADMIN DASHBOARD FUNCTIONS =================
+function addMobileToWhitelist() {
+    var mobileInput = document.getElementById('newAllowedMobile');
+    var mobileNo = mobileInput.value.trim();
+    if (mobileNo === "") return;
+
+    var whitelist = JSON.parse(localStorage.getItem('allowedMobiles')) || [];
+    if (whitelist.includes(mobileNo)) {
+        alert("यह मोबाइल नंबर पहले से लिस्ट में मौजूद है!");
+        return;
+    }
+    if (whitelist.length >= 20) {
+        alert("सीमा समाप्त! आप अधिकतम 20 मोबाइल नंबर ही जोड़ सकते हैं।");
+        return;
+    }
+    whitelist.push(mobileNo);
+    localStorage.setItem('allowedMobiles', JSON.stringify(whitelist));
+    mobileInput.value = '';
+    renderWhitelist();
+}
+
+function removeMobileFromWhitelist(index) {
+    var whitelist = JSON.parse(localStorage.getItem('allowedMobiles')) || [];
+    whitelist.splice(index, 1);
+    localStorage.setItem('allowedMobiles', JSON.stringify(whitelist));
+    renderWhitelist();
+}
+
+function renderWhitelist() {
+    var whitelist = JSON.parse(localStorage.getItem('allowedMobiles')) || [];
+    document.getElementById('currentCount').innerText = whitelist.length;
+    var container = document.getElementById('whitelistDisplay');
+    container.innerHTML = '';
+
+    if (whitelist.length === 0) {
+        container.innerHTML = '<em style="color: rgba(255,255,255,0.5);">कोई मोबाइल नंबर नहीं जोड़ा गया है।</em>';
+        return;
+    }
+    whitelist.forEach(function(mobile, index) {
+        container.innerHTML += '<div class="list-item"><span>' + (index + 1) + '. ' + mobile + '</span><button class="delete-btn" onclick="removeMobileFromWhitelist(' + index + ')">Remove</button></div>';
+    });
+}
+
+function logout() {
+    clearInterval(countdownInterval); 
+    document.getElementById('adminPanel').style.display = 'none';
+    document.getElementById('mainPortal').style.display = 'none';
+    document.getElementById('authPanel').style.display = 'block';
+    switchAuthTab('login');
+}
+
+// ================= प्रिंट फंक्शन कोड =================
+function validateForm() {
+    var portalType = document.getElementById('portalType').value;
+    var certType = document.getElementById('certType').value;
+    var appNo = document.getElementById('appno').value.trim();
+    var btn = document.getElementById('confirmBtn');
+    
+    if (portalType !== "" && certType !== "" && appNo !== "") {
+        btn.disabled = false;
+    } else {
+        btn.disabled = true;
+    }
+}
+
+function openLink() {
+    var portalType = document.getElementById('portalType').value;
+    var certType = document.getElementById('certType').value;
+    var appNo = document.getElementById('appno').value.trim();
+    
+    if (portalType === "" || certType === "" || appNo === "") return;
+    
+    var encodedAppNo = btoa(appNo);
+    var finalUrl = "";
+    
+    if (portalType === "edistrict") {
+        if (certType === "jati") {
+            finalUrl = "https://edistrict.up.gov.in/eDistrict/Certificate/Caste/Forms/printCert.aspx?application_no=" + encodedAppNo;
+        } else if (certType === "aay") {
+            finalUrl = "https://edistrict.up.gov.in/eDistrict/Certificate/INCOME/Forms/printIncomeCert.aspx?application_no=" + encodedAppNo;
+        } else if (certType === "niwas") {
+            finalUrl = "https://edistrict.up.gov.in/eDistrict/Certificate/Domicile/Forms/printDomCert.aspx?application_no=" + encodedAppNo;
+        }
+    } 
+    else if (portalType === "ecitizen") {
+        if (certType === "jati") {
+            finalUrl = "https://esathi.up.gov.in/citizenservices/ServiceEdist/Certificate/Caste/Forms/printCert.aspx?application_no=" + encodedAppNo;
+        } else if (certType === "aay") {
+            finalUrl = "https://esathi.up.gov.in/citizenservices/ServiceEdist/Certificate/INCOME/Forms/printIncomeCert.aspx?application_no=" + encodedAppNo;
+        } else if (certType === "niwas") {
+            finalUrl = "https://esathi.up.gov.in/citizenservices/ServiceEdist/Certificate/Domicile/Forms/printDomCert.aspx?application_no=" + encodedAppNo;
+        }
+    }
+    
+    // Original link ko hide karne ke liye about:blank window me iframe ka use kiya gaya hai
+    var newWin = window.open('about:blank', 'CertificatePrintWindow', 'width=1000,height=750,toolbar=no,menubar=no,scrollbars=yes,resizable=yes,location=no,status=no,directories=no');
+    if (newWin) {
+        newWin.document.write('<!DOCTYPE html><html><head><meta charset="UTF-8"><title>Certificate Print</title><style>body,html{margin:0;padding:0;height:100%;overflow:hidden;background:#fff;}iframe{width:100%;height:100%;border:none;}</style></head><body><iframe src="' + finalUrl + '" sandbox="allow-same-origin allow-scripts allow-popups allow-forms"></iframe></body></html>');
+        newWin.document.close();
+    }
+}
+
+// ================= सुरक्षा प्रतिबंध =================
+(function() {
+    var allowedDomain = "peedhsr-sys.github.io";
+    var currentHost = window.location.hostname;
+    
+    if (currentHost !== "" && currentHost !== "localhost" && currentHost !== "127.0.0.1" && !currentHost.includes(allowedDomain)) {
+        document.body.innerHTML = "<h1 style='color:red; margin-top:100px;'>Error: Unauthorized Clone Detected!</h1>";
+        window.location.href = "https://google.com";
+        return;
+    }
+
+    var menu = document.getElementById('custom-menu');
+
+    document.addEventListener('contextmenu', function(e) {
+        e.preventDefault();
+        e.stopPropagation();
+        
+        menu.style.left = e.pageX + 'px';
+        menu.style.top = e.pageY + 'px';
+        menu.style.display = 'block';
+        
+        setTimeout(function() {
+            menu.style.display = 'none';
+        }, 2000);
+    }, true);
+
+    document.addEventListener('click', function() {
+        menu.style.display = 'none';
+    });
+
+    document.addEventListener('keydown', function(e) {
+        if (
+            e.keyCode === 123 || 
+            (e.ctrlKey && e.shiftKey && (e.keyCode === 73 || e.keyCode === 74)) || 
+            (e.ctrlKey && e.keyCode === 85) 
+        ) {
+            e.stopPropagation();
+            e.preventDefault();
+            return false;
+        }
+    }, true);
+
+    setInterval(function() {
+        debugger;
+    }, 100);
+})();
+</script>
+
+</body>
 </html>
