@@ -28,7 +28,6 @@
             position: relative;
         }
 
-        /* 5 Dimension AI Era Background */
         body::before {
             content: "";
             position: fixed;
@@ -57,7 +56,6 @@
             to { opacity: 1; transform: translateY(0); }
         }
 
-        /* Login Screen */
         .login-container {
             display: flex; justify-content: center; align-items: center; min-height: 100vh;
         }
@@ -81,7 +79,6 @@
             -webkit-background-clip: text;
             -webkit-text-fill-color: transparent;
             margin-bottom: 10px;
-            text-shadow: 0 0 10px rgba(0, 243, 255, 0.5);
         }
 
         .subtitle { text-align: center; color: #888; margin-bottom: 30px; font-size: 14px; }
@@ -89,7 +86,7 @@
         .input-group { margin-bottom: 20px; }
         .input-group label { display: block; margin-bottom: 8px; font-size: 14px; color: #ccc; }
 
-        input, select {
+        input, select, textarea {
             width: 100%;
             padding: 12px 15px;
             background: var(--input-bg);
@@ -101,10 +98,16 @@
             transition: all 0.3s ease;
         }
 
-        input:focus, select:focus {
+        input:focus, select:focus, textarea:focus {
             border-color: var(--primary);
             box-shadow: 0 0 15px rgba(0, 243, 255, 0.4);
             background: rgba(255, 255, 255, 0.1);
+        }
+
+        input:disabled, select:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+            background: rgba(0,0,0,0.3);
         }
 
         .btn {
@@ -141,7 +144,6 @@
             color: var(--danger);
         }
 
-        /* Dashboard Layout */
         header {
             display: flex;
             justify-content: space-between;
@@ -180,7 +182,6 @@
         .checkbox-group { display: flex; flex-direction: column; gap: 10px; }
         .checkbox-group label { display: flex; align-items: center; gap: 10px; cursor: pointer; }
 
-        /* List Screen */
         .glass-table {
             width: 100%;
             border-collapse: collapse;
@@ -208,14 +209,22 @@
 
         .empty-state { text-align: center; padding: 50px; color: #666; font-size: 18px; }
 
-        /* Responsive */
+        .photo-preview {
+            width: 100px;
+            height: 100px;
+            border-radius: 8px;
+            border: 2px solid var(--border);
+            object-fit: cover;
+            margin-top: 10px;
+            background: #222;
+        }
+
         @media (max-width: 768px) {
             .form-grid { grid-template-columns: 1fr; }
             header { flex-direction: column; gap: 15px; text-align: center; padding: 20px; }
             .container { padding: 20px; }
         }
 
-        /* Custom Scrollbar */
         ::-webkit-scrollbar { width: 8px; }
         ::-webkit-scrollbar-track { background: #111; }
         ::-webkit-scrollbar-thumb { background: var(--primary); border-radius: 4px; }
@@ -272,19 +281,17 @@
                         </div>
                     </div>
 
-                    <div id="graminFields" class="form-group full-width" style="display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 15px;">
-                        <div>
-                            <label>मोहल्ला (Mohalla)</label>
-                            <input type="text" id="mohalla" value="ग्राम व पोस्ट- भेलउर" />
-                        </div>
-                        <div>
-                            <label>ग्राम (Village)</label>
-                            <input type="text" id="gram" value="भेलउर" />
-                        </div>
-                        <div>
-                            <label>थाना (Thana)</label>
-                            <input type="text" id="thana" value="एकौना" />
-                        </div>
+                    <div class="form-group">
+                        <label>मोहल्ला (Mohalla)</label>
+                        <input type="text" id="mohalla" placeholder="e.g. ग्राम व पोस्ट- भेलउर" />
+                    </div>
+                    <div class="form-group">
+                        <label>ग्राम (Village)</label>
+                        <input type="text" id="gram" placeholder="e.g. भेलउर" />
+                    </div>
+                    <div class="form-group">
+                        <label>थाना (Thana)</label>
+                        <input type="text" id="thana" placeholder="e.g. एकौना" />
                     </div>
 
                     <div class="form-group">
@@ -312,6 +319,7 @@
                     <div class="form-group">
                         <label>फोटो अपलोड (Upload Photo)</label>
                         <input type="file" id="photoUpload" accept="image/*" onchange="handlePhotoUpload(event)" />
+                        <img id="photoPreview" class="photo-preview" style="display:none;" />
                     </div>
 
                     <div class="form-group full-width" style="margin-top: 20px; border-top: 1px solid var(--border); padding-top: 20px;">
@@ -344,7 +352,6 @@
     </div>
 
     <script>
-        // District Data Mapping
         const districtData = {
             "शाहजहाँपुर": ["सदर", "पुवायाँ", "तिलहर", "जलालाबाद", "कलान"],
             "बरेली": ["आंवला", "बहेड़ी", "बरेली", "फरीदपुर", "मीरगंज", "नवाबगंज"],
@@ -442,8 +449,6 @@
                 distSelect.appendChild(opt);
             });
             updateTehsils();
-            
-            // Set default date
             document.getElementById('issueDate').valueAsDate = new Date();
         }
 
@@ -469,8 +474,24 @@
 
         function toggleArea() {
             const areaType = document.querySelector('input[name="areaType"]:checked').value;
-            const graminFields = document.getElementById('graminFields');
-            graminFields.style.display = areaType === 'gramin' ? 'grid' : 'none';
+            const mohallaInput = document.getElementById('mohalla');
+            const gramInput = document.getElementById('gram');
+            const thanaInput = document.getElementById('thana');
+
+            if (areaType === 'nagar') {
+                // Nagar me sab khali aur disabled
+                mohallaInput.value = '';
+                gramInput.value = '';
+                thanaInput.value = '';
+                mohallaInput.disabled = true;
+                gramInput.disabled = true;
+                thanaInput.disabled = true;
+            } else {
+                // Gramin me wapas enable
+                mohallaInput.disabled = false;
+                gramInput.disabled = false;
+                thanaInput.disabled = false;
+            }
         }
 
         function toggleManualInputs() {
@@ -484,6 +505,9 @@
                 const reader = new FileReader();
                 reader.onload = function(e) {
                     currentPhotoBase64 = e.target.result;
+                    const preview = document.getElementById('photoPreview');
+                    preview.src = e.target.result;
+                    preview.style.display = 'block';
                 };
                 reader.readAsDataURL(file);
             }
@@ -524,22 +548,24 @@
 
         function submitForm() {
             const isManualApp = document.getElementById('manualAppNo').checked;
-            let appNo = isManualApp ? document.getElementById('appNoInput').value : generateAppNo();
+            let appNo = isManualApp ? document.getElementById('appNoInput').value.trim() : generateAppNo();
             if(isManualApp && !appNo) return alert("Enter App No");
 
             const isManualCert = document.getElementById('manualCertNo').checked;
-            let certNo = isManualCert ? document.getElementById('certNoInput').value : generateCertNo();
+            let certNo = isManualCert ? document.getElementById('certNoInput').value.trim() : generateCertNo();
             if(isManualCert && !certNo) return alert("Enter Cert No");
+
+            const areaType = document.querySelector('input[name="areaType"]:checked').value;
 
             const data = {
                 appNo: appNo,
                 certNo: certNo,
                 district: document.getElementById('district').value,
                 tehsil: document.getElementById('tehsil').value,
-                areaType: document.querySelector('input[name="areaType"]:checked').value,
-                mohalla: document.getElementById('mohalla').value,
-                gram: document.getElementById('gram').value,
-                thana: document.getElementById('thana').value,
+                areaType: areaType,
+                mohalla: areaType === 'gramin' ? document.getElementById('mohalla').value : '',
+                gram: areaType === 'gramin' ? document.getElementById('gram').value : '',
+                thana: areaType === 'gramin' ? document.getElementById('thana').value : '',
                 applicantName: document.getElementById('applicantName').value,
                 fatherName: document.getElementById('fatherName').value,
                 motherName: document.getElementById('motherName').value,
@@ -621,192 +647,289 @@
             const qrData = `https://edistrict.up.gov.in/edistrictup/certVerify.aspx?application_no=${btoa(data.appNo)}JTJj${btoa(data.certNo)}`;
             const qrUrl = `https://api.qrserver.com/v1/create-qr-code/?size=150x150&data=${encodeURIComponent(qrData)}`;
             
-            const photoSrc = data.photo || `data:image/svg+xml;base64,${btoa('<svg xmlns="http://www.w3.org/2000/svg" width="96" height="96"><rect width="96" height="96" fill="#ccc"/><text x="10" y="55" font-family="Arial" font-size="12" fill="#555">NO PHOTO</text></svg>')}`;
+            const photoSrc = data.photo || '';
+            const photoHtml = photoSrc ? `<img id="certPhoto" style='width: 96px; height: 96px;' src="${photoSrc}"/>` : `<div style='width:96px;height:96px;border:1px solid #000;display:inline-block;vertical-align:top;'></div>`;
 
-            const printWindow = window.open('', '_blank');
+            // Nagar ke liye values khali rakhni hain
+            const isNagar = data.areaType === 'nagar';
+            const mohalla = isNagar ? '' : (data.mohalla || '');
+            const gram = isNagar ? '' : (data.gram || '');
+            const thana = isNagar ? '' : (data.thana || '');
+
+            // BILKUL ORIGINAL HTML STRUCTURE - Same to Same copy
             const tableHtml = `
-            <!DOCTYPE html>
-            <html>
-            <head>
-                <title>Certificate Print</title>
-                <style>
-                    body { font-family: Arial Unicode MS, sans-serif; margin: 0; padding: 20px; background: #fff; color: #000; }
-                    .mgn { border: 1px solid #000; padding: 4px; width: 90%; margin: 0 auto; border-collapse: collapse; font-size: 10pt; }
-                    .mgn td { padding: 4px; vertical-align: top; }
-                    @media print {
-                        @page { margin: 1cm; }
-                        body { margin: 0; padding: 0; }
-                        .mgn { width: 100%; }
-                    }
-                </style>
-            </head>
-            <body onload="window.print();">
-                <table class="mgn" border=0 align=center width=90% cellspacing=0 cellpadding=0>
-                    <tr><td colspan=6>&nbsp;</td></tr>
-                    <tr>
-                        <td colspan=6>
-                            <p align=center><img src='sealofup.jpg' width='110' height='110' onerror="this.style.display='none'"/></p>
-                        </td>
-                    </tr>
-                    <tr><td colspan=6><p align=center><font size=7>उत्तर प्रदॆश शासन</font></td></tr>
-                    <tr><td colspan=6>&nbsp;</td></tr>
-                    <tr><td colspan=6><p align=center><b><font size=4>कार्यालय उप जिलाधिकारी द्वारा प्रदत्त सामान्य निवास प्रमाण पत्र</font></b></td></tr>
-                    <tr><td colspan=6>&nbsp;</td></tr>
-                    <tr>
-                        <td width=17% nowrap><b>जिला </b></td>
-                        <td nowrap><b>${data.district}</b></td>
-                        <td width=30% colspan=3 align=right>&nbsp;</td>
-                        <td align=left width=35% nowrap>&nbsp;</td>
-                    </tr>
-                    <tr>
-                        <td width=17% nowrap><b>तहसील </b></td>
-                        <td nowrap><b>${data.tehsil}</b></td>
-                        <td width=30% colspan=3 align=right>&nbsp;</td>
-                        <td align=left width=35% nowrap><b>जारी दिनांक: ${data.issueDate}</b></td>
-                    </tr>
-                    <tr>
-                        <td width=17% valign=top nowrap><b>आवेदन क्र०</b></td>
-                        <td width=30% nowrap valign=top><b>${data.appNo}</b></td>
-                        <td width=30% colspan=3 valign=top align=left>&nbsp;</td>
-                        <td width=35% align=right>&nbsp;</td>
-                    </tr>
-                    <tr>
-                        <td width=17% nowrap valign=top><b>प्रमाणपत्र क्र०</b></td>
-                        <td width=30% nowrap valign=top><b>${data.certNo}</b></td>
-                        <td width=30% colspan=3 valign=top align=left>&nbsp;</td>
-                        <td width=35% align=right>&nbsp;</td>
-                    </tr>
-                    <tr><td colspan=6>&nbsp;</td></tr>
-                    <tr>
-                        <td colspan=6>
-                            <table border=0 style='font-size:10pt' width=100% cellspacing=0 cellpadding=0>
-                                <tr>
-                                    <td width=10% align=left valign=top>&nbsp;</td>
-                                    <td width=32% nowrap align=left colspan=2 valign=top>सम्बन्धित लेखपाल की जांच आख्या दिनांक ${data.issueDate} के आधार पर एतद् द्वारा</td>
-                                    <td width=25% rowspan=6 align=left valign=top>
-                                        <img style='width: 96px; height: 96px;' src="${photoSrc}"/>
-                                    </td>
-                                </tr>
-                                <tr>
-                                    <td width=10% align=left valign=top>&nbsp;</td>
-                                    <td width=32% height=20 align=left nowrap valign=middle>प्रमाणित किया जाता है कि</td>
-                                    <td width=33% height=20 align=left valign=middle><b>${data.applicantName}</b></td>
-                                </tr>
-                                <tr>
-                                    <td width=10% align=left valign=top>&nbsp;</td>
-                                    <td width=32% height=20 align=left valign=middle>पुत्र/पुत्री </td>
-                                    <td width=33% height=20 align=left valign=middle><b>${data.fatherName}</b></td>
-                                </tr>
-                                <tr>
-                                    <td width=10% align=left valign=top>&nbsp;</td>
-                                    <td width=32% height=20 align=left valign=middle>माता का नाम</td>
-                                    <td width=33% height=20 align=left valign=middle><b>${data.motherName}</b></td>
-                                </tr>
-                                <tr>
-                                    <td width=10% align=left valign=top>&nbsp;</td>
-                                    <td width=32% height=20 align=left nowrap valign=middle>मकान नम्बर</td>
-                                    <td width=33% height=20 align=left valign=middle><b></b></td>
-                                </tr>
-                                <tr>
-                                    <td width=10% align=left valign=top>&nbsp;</td>
-                                    <td width=32% height=20 align=left nowrap valign=middle>मोहल्ला</td>
-                                    <td width=33% height=20 align=left valign=middle><b>${data.areaType === 'gramin' ? data.mohalla : '&nbsp;'}</b></td>
-                                </tr>
-                                <tr>
-                                    <td width=20% align=left nowrap valign=top>&nbsp;</td>
-                                    <td width=32% height=20 align=left nowrap valign=top>ग्राम</td>
-                                    <td width=33% height=20 align=left valign=top><b>${data.areaType === 'gramin' ? data.gram : '&nbsp;'}</b>&nbsp;</td>
-                                </tr>
-                                <tr>
-                                    <td width=20% align=left nowrap valign=top>&nbsp;</td>
-                                    <td width=32% height=20 align=left nowrap valign=top>थाना</td>
-                                    <td width=33% height=20 align=left valign=top><b>${data.areaType === 'gramin' ? data.thana : '&nbsp;'}</b>&nbsp;</td>
-                                </tr>
-                                <tr>
-                                    <td width=10% align=left nowrap valign=top>&nbsp;</td>
-                                    <td width=32% height=20 align=left nowrap valign=top>तहसील</td>
-                                    <td width=33% height=20 align=left valign=top><b>${data.tehsil}</b></td>
-                                </tr>
-                                <tr>
-                                    <td width=10% align=left nowrap valign=top>&nbsp;</td>
-                                    <td width=32% height=20 align=left nowrap valign=top>जिला</td>
-                                    <td width=33% height=20 align=left valign=top><b>${data.district}</b></td>
-                                </tr>
-                            </table>
-                            &nbsp;
-                        </td>
-                    </tr>
-                    <tr>
-                        <td colspan=6>
-                            उत्तर प्रदेश का/की निवासी है व उसका वर्तमान पता मकान नम्बर 
-                            <u><b></b></u>
-                            ग्राम 
-                            <b><u>${data.areaType === 'gramin' ? data.gram : '&nbsp;'}</u></b>
-                            मोहल्ला 
-                            <u><b>${data.areaType === 'gramin' ? data.mohalla : '&nbsp;'}</b></u>
-                            तहसील 
-                            <u><b>${data.tehsil}</b></u>
-                            ,जनपद 
-                            <u><b>${data.district}</b></u>
-                            उत्तर प्रदेश है |<br>2.उपर्युक्त की पुष्टि प्रारूप - १ में आवेदन एवं  सत्यापनकर्ता द्वारा उपलब्ध कराई गई सूचना तथा इससे संतुष्ट हो जाने के उपरान्त अधोहस्ताक्षरी द्वारा उत्तर प्रदेश के इस जनपद का सामान्य निवासी होने विषयक प्रमाण पत्र निर्गत किया जा रहा है।
-                        </td>
-                    </tr>
-                    <tr><td colspan=6>&nbsp;</td></tr>
-                    <tr><td colspan=6>&nbsp;<img style='width: 90px; height: 90px' src="${qrUrl}"/></td></tr>
-                    <tr>
-                        <td align=center colspan=6>
-                            <table border=0 style='font-size:10pt' align=center width=100% cellspacing=0 cellpadding=0>
-                                <tr>
-                                    <td align=left width=17% nowrap valign=bottom height=80><b>&nbsp;</b></td>
-                                    <td width=23% nowrap valign=bottom height=80><b></b></td>
-                                    <td width=29% nowrap valign=bottom height=80 rowspan=4>
-                                        <table border=0 width=100% cellspacing=0 cellpadding=0>
-                                            <tr>
-                                                <td width=50% valign=top style='font-size: 20px; font-family: Arial'>${data.officerName} &nbsp;</td>
-                                                <td valign=top width=50% style='font-size: 8px; font-family: Arial'>Digitally Signed by ${data.officerName}  O=Personal, C=IN,CN=${data.officerName}, S=Uttar Pradesh &nbsp;</td>
-                                            </tr>
-                                        </table>
-                                        &nbsp;
-                                    </td>
-                                    <td width=15% nowrap colspan=2 align=center valign=bottom height=80></td>
-                                </tr>
-                                <tr>
-                                    <td align=left width=17% nowrap>&nbsp;</td>
-                                    <td width=23% style='font-size: 8px; font-family: Arial'><b></b></td>
-                                    <td width=15% colspan=2 align=center nowrap><b>सक्षम अधिकारी/उप जिलाधिकारी</b></td>
-                                </tr>
-                                <tr>
-                                    <td align=left width=17% nowrap>&nbsp;</td>
-                                    <td width=23% style='font-size: 8px; font-family: Arial'><b></b></td>
-                                    <td width=15% colspan=2 align=center nowrap><b>डिजिटल हस्ताक्षरित</b></td>
-                                </tr>
-                                <tr>
-                                    <td width=17% nowrap>&nbsp;</td>
-                                    <td width=23% nowrap>&nbsp;<b>&nbsp;</b></td>
-                                    <td width=9% align=center nowrap colspan=2><b>${data.tehsil},${data.district}</b></td>
-                                </tr>
-                                <tr>
-                                    <td width=17% nowrap>&nbsp;</td>
-                                    <td width=23% nowrap>&nbsp;</td>
-                                    <td width=29% nowrap>&nbsp;</td>
-                                    <td width=9% nowrap><b>दिनॉंक:</b></td>
-                                    <td width=19% nowrap><b>${data.issueDate}</b></td>
-                                </tr>
-                                <tr><td colspan=6>&nbsp;</td></tr>
-                            </table>
-                        </td>
-                    </tr>
-                    <tr>
-                        <td align=center colspan=6>
-                            <font size='1pt'>
-                                <b>यह प्रमाण पत्र इलेक्ट्रॉनिक डिलिवरी सिस्टम द्वारा तैयार किया गया है तथा डिजिटल सिग्नेचर से हस्ताक्षरित है एवम् आवेदक द्वारा स्वयं की लॉग इन आइडी के माध्यम से डाउनलोड किया गया है। यह प्रमाण पत्र वेबसाइट https://edistrict.up.gov.in पर इसका  पहले आवेदन क्र० फिर प्रमाणपत्र क्र० अंकित कर,सत्यापित किया जा सकता है।</b>
-                            </font>
-                        </td>
-                    </tr>
-                </table>
-            </body>
-            </html>`;
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+    <title>Print Certificate</title>
+    <style type="text/css">
+        body { font-family: Arial Unicode MS, sans-serif; font-size: 10pt; background: #fff; color: #000; margin: 10px; }
+        @media print {
+            @page { margin: 1cm; }
+            body { margin: 0; }
+        }
+    </style>
+</head>
+<body onload="window.print();">
+<table class=mgn border=0 align=center width=90% cellspacing=0 cellpadding=0 style='border: 1px solid #000000; padding-left: 4px; padding-right: 4px; padding-top: 1px; padding-bottom: 1px;font-size:10pt;font-family: Arial Unicode MS'>
+    <tr><td colspan=6>&nbsp;</td></tr>
+    <tr>
+        <td colspan=6>
+            <p align=center>
+                <img src='sealofup.jpg' width='110' height='110' onerror="this.style.display='none'"/>
+        </td>
+    </tr>
+    <tr>
+        <td colspan=6>
+            <p align=center>
+                <font size=7>उत्तर प्रदॆश शासन</font>
+        </td>
+    </tr>
+    <tr><td colspan=6>&nbsp;</td></tr>
+    <tr>
+        <td colspan=6>
+            <p align=center>
+                <b>
+                    <font size=4>कार्यालय उप जिलाधिकारी द्वारा प्रदत्त सामान्य निवास प्रमाण पत्र</font>
+                </b>
+        </td>
+    </tr>
+    <tr><td colspan=6>&nbsp;</td></tr>
+    <tr>
+        <td width=17% nowrap>
+            <b>जिला </b>
+        </td>
+        <td nowrap>
+            <b><span id="district_top">${data.district}</span></b>
+        </td>
+        <td width=30% colspan=3 align=right>&nbsp;</td>
+        <td align=left width=35% nowrap>&nbsp;</td>
+    </tr>
+    <tr>
+        <td width=17% nowrap>
+            <b>तहसील </b>
+        </td>
+        <td nowrap>
+            <b><span id="tehsil_top">${data.tehsil}</span></b>
+        </td>
+        <td width=30% colspan=3 align=right>&nbsp;</td>
+        <td align=left width=35% nowrap>
+            <b>जारी दिनांक: <span id="date_top">${data.issueDate}</span></b>
+        </td>
+    </tr>
+    <tr>
+        <td width=17% valign=top nowrap>
+            <b>आवेदन क्र०</b>
+        </td>
+        <td width=30% nowrap valign=top>
+            <b>
+                <span id="app_no_val">${data.appNo}</span>
+            </b>
+        </td>
+        <td width=30% colspan=3 valign=top align=left>&nbsp;</td>
+        <td width=35% align=right>&nbsp;</td>
+    </tr>
+    <tr>
+        <td width=17% nowrap valign=top>
+            <b>प्रमाणपत्र क्र०</b>
+        </td>
+        <td width=30% nowrap valign=top>
+            <b>
+                <span id="cert_no_val">${data.certNo}</span>
+            </b>
+        </td>
+        <td width=30% colspan=3 valign=top align=left>&nbsp;</td>
+        <td width=35% align=right>&nbsp;</td>
+    </tr>
+    <tr><td colspan=6>&nbsp;</td></tr>
+    <tr>
+        <td colspan=6>
+            <table border=0 style='font-size:10pt' width=100% cellspacing=0 cellpadding=0>
+                <tr>
+                    <td width=10% align=left valign=top>&nbsp;</td>
+                    <td width=32% nowrap align=left colspan=2 valign=top>सम्बन्धित लेखपाल की जांच आख्या दिनांक <span id="date_report">${data.issueDate}</span> के आधार पर एतद् द्वारा</td>
+                    <td width=25% rowspan=6 align=left valign=top>
+                        ${photoHtml}
+                    </td>
+                </tr>
+                <tr>
+                    <td width=10% align=left valign=top>&nbsp;</td>
+                    <td width=32% height=20 align=left nowrap valign=middle>प्रमाणित किया जाता है कि</td>
+                    <td width=33% height=20 align=left valign=middle>
+                        <b>${data.applicantName}</b>
+                    </td>
+                </tr>
+                <tr>
+                    <td width=10% align=left valign=top>&nbsp;</td>
+                    <td width=32% height=20 align=left valign=middle>पुत्र/पुत्री </td>
+                    <td width=33% height=20 align=left valign=middle>
+                        <b>${data.fatherName}</b>
+                    </td>
+                </tr>
+                <tr>
+                    <td width=10% align=left valign=top>&nbsp;</td>
+                    <td width=32% height=20 align=left valign=middle>माता का नाम</td>
+                    <td width=33% height=20 align=left valign=middle>
+                        <b>${data.motherName}</b>
+                    </td>
+                </tr>
+                <tr>
+                    <td width=10% align=left valign=top>&nbsp;</td>
+                    <td width=32% height=20 align=left nowrap valign=middle>मकान नम्बर</td>
+                    <td width=33% height=20 align=left valign=middle>
+                        <b></b>
+                    </td>
+                </tr>
+                <tr>
+                    <td width=10% align=left valign=top>&nbsp;</td>
+                    <td width=32% height=20 align=left nowrap valign=middle>मोहल्ला</td>
+                    <td width=33% height=20 align=left valign=middle>
+                        <b id="mohalla_table">${mohalla}</b>
+                    </td>
+                </tr>
+                <tr>
+                    <td width=20% align=left nowrap valign=top>&nbsp;</td>
+                    <td width=32% height=20 align=left nowrap valign=top>ग्राम</td>
+                    <td width=33% height=20 align=left valign=top>
+                        <b id="gram_table">${gram}</b>
+                        &nbsp;
+                    </td>
+                </tr>
+                <tr>
+                    <td width=20% align=left nowrap valign=top>&nbsp;</td>
+                    <td width=32% height=20 align=left nowrap valign=top>थाना</td>
+                    <td width=33% height=20 align=left valign=top>
+                        <b>${thana}</b>
+                        &nbsp;
+                    </td>
+                </tr>
+                <tr>
+                    <td width=10% align=left nowrap valign=top>&nbsp;</td>
+                    <td width=32% height=20 align=left nowrap valign=top>तहसील</td>
+                    <td width=33% height=20 align=left valign=top>
+                        <b id="tehsil_table">${data.tehsil}</b>
+                    </td>
+                </tr>
+                <tr>
+                    <td width=10% align=left nowrap valign=top>&nbsp;</td>
+                    <td width=32% height=20 align=left nowrap valign=top>जिला</td>
+                    <td width=33% height=20 align=left valign=top>
+                        <b id="district_table">${data.district}</b>
+                    </td>
+                </tr>
+            </table>
+            &nbsp;
+        </td>
+    </tr>
+    <tr>
+        <td colspan=6>
+            उत्तर प्रदेश का/की निवासी है व उसका वर्तमान पता मकान नम्बर 
+            <u>
+                <b></b>
+            </u>
+            ग्राम 
+            <b>
+                <u id="gram_para">${gram} </u>
+            </b>
+            मोहल्ला 
+            <u>
+                <b id="mohalla_para">${mohalla}</b>
+            </u>
+            तहसील 
+            <u>
+                <b id="tehsil_para">${data.tehsil}</b>
+            </u>
+            ,जनपद 
+            <u>
+                <b id="district_para">${data.district}</b>
+            </u>
+            उत्तर प्रदेश है |<br>2.उपर्युक्त की पुष्टि प्रारूप - १ में आवेदन एवं  सत्यापनकर्ता द्वारा उपलब्ध कराई गई सूचना तथा इससे संतुष्ट हो जाने के उपरान्त अधोहस्ताक्षरी द्वारा उत्तर प्रदेश के इस जनपद का सामान्य निवासी होने विषयक प्रमाण पत्र निर्गत किया जा रहा है।
+        </td>
+    </tr>
+    <tr><td colspan=6>&nbsp;</td></tr>
+    <tr>
+        <td colspan=6>
+            &nbsp;<img id="qrCodeImg" style='width: 90px; height: 90px' src="${qrUrl}"/>
+        </td>
+    </tr>
+    <tr>
+        <td align=center colspan=6>
+            <table border=0 style='font-size:10pt' align=center width=100% cellspacing=0 cellpadding=0>
+                <tr>
+                    <td align=left width=17% nowrap valign=bottom height=80>
+                        <b>&nbsp;</b>
+                    </td>
+                    <td width=23% nowrap valign=bottom height=80>
+                        <b></b>
+                    </td>
+                    <td width=29% nowrap valign=bottom height=80 rowspan=4>
+                        <table border=0 width=100% cellspacing=0 cellpadding=0 id=table1>
+                            <tr>
+                                <td width=50% valign=top style='font-size: 20px; font-family: Arial'><span>${data.officerName}</span> &nbsp;</td>
+                                <td valign=top width=50% style='font-size: 8px; font-family: Arial'>Digitally Signed by <span>${data.officerName}</span>  O=Personal, C=IN,CN=<span>${data.officerName}</span>, S=Uttar Pradesh &nbsp;</td>
+                            </tr>
+                        </table>
+                        &nbsp;
+                    </td>
+                    <td width=15% nowrap colspan=2 align=center valign=bottom height=80></td>
+                </tr>
+                <tr>
+                    <td align=left width=17% nowrap>&nbsp;</td>
+                    <td width=23% style='font-size: 8px; font-family: Arial'>
+                        <b>
+                    </td>
+                    <td width=15% colspan=2 align=center nowrap>
+                        <b>सक्षम अधिकारी/उप जिलाधिकारी</b>
+                    </td>
+                </tr>
+                <tr>
+                    <td align=left width=17% nowrap>&nbsp;</td>
+                    <td width=23% style='font-size: 8px; font-family: Arial'>
+                        <b>
+                    </td>
+                    <td width=15% colspan=2 align=center nowrap>
+                        <b>डिजिटल हस्ताक्षरित</b>
+                    </td>
+                </tr>
+                <tr>
+                    <td width=17% nowrap>&nbsp;</td>
+                    <td width=23% nowrap>
+                        &nbsp;<b>&nbsp;</b>
+                    </td>
+                    <td width=9% align=center nowrap colspan=2>
+                        <b><span id="tehsil_bottom">${data.tehsil}</span>,<span id="district_bottom">${data.district}</span></b>
+                    </td>
+                </tr>
+                <tr>
+                    <td width=17% nowrap>&nbsp;</td>
+                    <td width=23% nowrap>&nbsp;</td>
+                    <td width=29% nowrap>&nbsp;</td>
+                    <td width=9% nowrap>
+                        <b>दिनॉंक:</b>
+                    </td>
+                    <td width=19% nowrap>
+                        <b id="date_bottom">${data.issueDate}</b>
+                    </td>
+                </tr>
+                <tr>
+                    <td colspan=6>&nbsp;</td>
+                </tr>
+            </table>
+        </td>
+    </tr>
+    <tr>
+        <td align=center colspan=6>
+            <font size='1pt'>
+                <b>यह प्रमाण पत्र इलेक्ट्रॉनिक डिलिवरी सिस्टम द्वारा तैयार किया गया है तथा डिजिटल सिग्नेचर से हस्ताक्षरित है एवम् आवेदक द्वारा स्वयं की लॉग इन आइडी के माध्यम से डाउनलोड किया गया है। यह प्रमाण पत्र वेबसाइट https://edistrict.up.gov.in पर इसका  पहले आवेदन क्र० फिर प्रमाणपत्र क्र० अंकित कर,सत्यापित किया जा सकता है।</b>
+            </font>
+        </td>
+    </tr>
+</table>
+</body>
+</html>`;
             
+            const printWindow = window.open('', '_blank');
+            printWindow.document.open();
             printWindow.document.write(tableHtml);
             printWindow.document.close();
         }
